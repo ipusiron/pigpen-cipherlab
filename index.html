@@ -22,14 +22,40 @@
     <!-- 暗号化タブ -->
     <section id="encrypt" class="tab-content active">
       <h2>暗号化</h2>
+      
+      <div class="glyph-selector">
+        <label for="encryptGlyphSelect">換字表：</label>
+        <select id="encryptGlyphSelect">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+      
       <textarea id="plaintext" rows="4" placeholder="英字を入力してください（例: HELLO WORLD）"></textarea>
+      <div id="warningMessage" class="warning-message"></div>
       <button id="encryptButton">暗号化する</button>
+      
+      <h3>換字表（アルファベットとグリフの対応表）</h3>
+      <div id="alphabetReference" class="alphabet-reference"></div>
+      
+      <h3>暗号文</h3>
       <div id="cipherOutput" class="glyph-output"></div>
     </section>
 
     <!-- 復号タブ -->
     <section id="decrypt" class="tab-content">
       <h2>復号</h2>
+      
+      <div class="glyph-selector">
+        <label for="decryptGlyphSelect">換字表：</label>
+        <select id="decryptGlyphSelect">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+      
       <div id="glyphButtons" class="glyph-grid"></div>
       <div id="decryptedText" class="output-text"></div>
       <button id="resetButton">リセット</button>

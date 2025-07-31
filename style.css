@@ -11,6 +11,7 @@ header {
   padding: 2rem 1rem 1rem;
   background-color: #2c3e50;
   color: white;
+  position: relative;
 }
 
 h1 {
@@ -64,6 +65,7 @@ textarea {
   border: 1px solid #ccc;
   resize: vertical;
   margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 button {
@@ -128,4 +130,118 @@ footer {
   font-size: 0.9rem;
   background-color: #ecf0f1;
   margin-top: 2rem;
+}
+
+.alphabet-reference {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 15px;
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.reference-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.reference-letter {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.reference-glyph {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  padding: 3px;
+}
+
+.cipher-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.cipher-glyph {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 4px;
+}
+
+.cipher-letter {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.glyph-selector {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.glyph-selector label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.glyph-selector select {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.glyph-selector select:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.warning-message {
+  display: none;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.reference-item.highlight {
+  background-color: #ffeaa7;
+  border-radius: 8px;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+}
+
+.reference-item.highlight-recent {
+  background-color: #ffb3b3;
+  border-radius: 8px;
+  transform: scale(1.15);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+  border: 2px solid #ff6666;
+}
+
+.reference-item {
+  transition: all 0.3s ease;
 }
