@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pigpen CipherLab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Pigpen CipherLab</h1>
+    <p>ピッグペン暗号を可視化した学習ツール</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-button active" data-tab="encrypt">🔐 暗号化</button>
+    <button class="tab-button" data-tab="decrypt">🔓 復号</button>
+    <button class="tab-button" data-tab="learn">📘 座学</button>
+  </nav>
+
+  <main>
+    <!-- 暗号化タブ -->
+    <section id="encrypt" class="tab-content active">
+      <h2>暗号化</h2>
+      <textarea id="plaintext" rows="4" placeholder="英字を入力してください（例: HELLO WORLD）"></textarea>
+      <button id="encryptButton">暗号化する</button>
+      <div id="cipherOutput" class="glyph-output"></div>
+    </section>
+
+    <!-- 復号タブ -->
+    <section id="decrypt" class="tab-content">
+      <h2>復号</h2>
+      <div id="glyphButtons" class="glyph-grid"></div>
+      <div id="decryptedText" class="output-text"></div>
+      <button id="resetButton">リセット</button>
+    </section>
+
+    <!-- 座学タブ -->
+    <section id="learn" class="tab-content">
+      <h2>座学：ピッグペン暗号とは</h2>
+      <div class="learn-content">
+        <p>ピッグペン暗号（Pigpen Cipher）は、18世紀の秘密結社フリーメイソンが使用したとされる古典的な暗号方式です。</p>
+        <ul>
+          <li>図形ベースの換字式暗号</li>
+          <li>3×3グリッドとX型グリッドに文字を割り当て</li>
+          <li>遊びや教育用途にも活用されている</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer">
+      🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/pigpen-cipherlab" target="_blank">ipusiron/pigpen-cipherlab</a> ）
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
