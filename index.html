@@ -10,6 +10,7 @@
   <header>
     <h1>Pigpen CipherLab</h1>
     <p>ピッグペン暗号を可視化した学習ツール</p>
+    <button id="helpButton" class="help-button" title="ヘルプ">❓</button>
   </header>
 
   <nav class="tabs">
@@ -23,13 +24,30 @@
     <section id="encrypt" class="tab-content active">
       <h2>暗号化</h2>
       
-      <div class="glyph-selector">
-        <label for="encryptGlyphSelect">換字表：</label>
-        <select id="encryptGlyphSelect">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
+      <div class="controls-row">
+        <div class="glyph-selector">
+          <label for="encryptGlyphSelect">換字表：</label>
+          <select id="encryptGlyphSelect">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        
+        <div class="space-toggle">
+          <label>空白処理：</label>
+          <div class="toggle-switch">
+            <button id="ignoreSpaceBtn" class="toggle-option active" data-mode="ignore">
+              無視
+            </button>
+            <button id="preserveSpaceBtn" class="toggle-option" data-mode="preserve">
+              保持
+            </button>
+          </div>
+          <div class="mode-indicator">
+            <span id="currentModeText">現在：空白を無視</span>
+          </div>
+        </div>
       </div>
       
       <textarea id="plaintext" rows="4" placeholder="英字を入力してください（例: HELLO WORLD）"></textarea>
@@ -57,20 +75,167 @@
       </div>
       
       <div id="glyphButtons" class="glyph-grid"></div>
-      <div id="decryptedText" class="output-text"></div>
-      <button id="resetButton">リセット</button>
+      
+      <h3>復号結果</h3>
+      <div class="result-container">
+        <div id="decryptedText" class="output-text"></div>
+        <div class="result-buttons">
+          <button id="copyButton">コピー</button>
+          <button id="resetButton">リセット</button>
+          <div id="copyToast" class="copy-toast">コピーしました！</div>
+        </div>
+      </div>
     </section>
 
     <!-- 座学タブ -->
     <section id="learn" class="tab-content">
-      <h2>座学：ピッグペン暗号とは</h2>
-      <div class="learn-content">
-        <p>ピッグペン暗号（Pigpen Cipher）は、18世紀の秘密結社フリーメイソンが使用したとされる古典的な暗号方式です。</p>
-        <ul>
-          <li>図形ベースの換字式暗号</li>
-          <li>3×3グリッドとX型グリッドに文字を割り当て</li>
-          <li>遊びや教育用途にも活用されている</li>
-        </ul>
+      <h2>座学：ピッグペン暗号を学ぼう</h2>
+      
+      <!-- 学習１：概要 -->
+      <div class="learning-section">
+        <h3>学習１：ピッグペン暗号の概要</h3>
+        <div class="learn-content">
+          <p>ピッグペン暗号（Pigpen Cipher）は、18世紀の秘密結社フリーメイソンが使用したとされる古典的な暗号方式です。</p>
+          <ul>
+            <li><strong>図形ベースの換字式暗号</strong>：各アルファベットを特定の図形に置き換える</li>
+            <li><strong>3×3グリッドとX型グリッド</strong>：26文字を2つのグリッドに配置</li>
+            <li><strong>豚小屋暗号</strong>：グリッドの形が豚小屋に似ていることから命名</li>
+            <li><strong>現在の用途</strong>：遊びや教育、パズルなどで活用されている</li>
+          </ul>
+          <p>この暗号の特徴は、文字の形を図形化することで、一見すると意味不明な記号の羅列に見えることです。</p>
+        </div>
+      </div>
+
+      <!-- 学習２：換字表 -->
+      <div class="learning-section">
+        <h3>学習２：換字表の読み方</h3>
+        <div class="learn-content">
+          <p>ピッグペン暗号では、以下のような換字表を使用してアルファベットを図形に変換します：</p>
+          
+          <div class="key-mapping-container">
+            <div class="key-mapping-selector">
+              <label for="learningGlyphSelect">換字表：</label>
+              <select id="learningGlyphSelect">
+                <option value="1">セット 1</option>
+                <option value="2">セット 2</option>
+                <option value="3">セット 3</option>
+              </select>
+            </div>
+            <div class="key-mapping-display">
+              <img id="keyMappingImage" src="assets/glyphs/1/key_mapping.svg" alt="換字表" />
+            </div>
+          </div>
+          
+          <h4>📖 換字表の詳しい読み方</h4>
+          
+          <div class="reading-guide">
+            <h5>1. 基本的な仕組み</h5>
+            <p>換字表1の場合、アルファベット26文字を2つのグリッドに配置し、各文字をその位置の「囲み」で表現します：</p>
+            <ul>
+              <li><strong>3×3グリッド（井桁）</strong>：A〜Rの18文字を配置</li>
+              <li><strong>X字グリッド</strong>：S〜Zの8文字を配置</li>
+            </ul>
+            
+            <h5>2. 3×3グリッドの読み方（A〜R）</h5>
+            <p>各マス目の位置によって、そのマスを囲む「壁」の形が決まります：</p>
+            <ul>
+              <li><strong>左上（A）</strong>：右と下に壁 → ┘ の形</li>
+              <li><strong>中央上（B）</strong>：左右と下に壁 → ⊔ の形</li>
+              <li><strong>右上（C）</strong>：左と下に壁 → └ の形</li>
+              <li><strong>左中（D）</strong>：上下と右に壁 → コ の形</li>
+              <li><strong>中央（E）</strong>：四方に壁 → □ の形</li>
+              <li><strong>右中（F）</strong>：上下と左に壁 → <span style="display:inline-block; transform: rotate(180deg);">コ</span> の形</li>
+              <li><strong>左下（G）</strong>：上と右に壁 → ┐ の形</li>
+              <li><strong>中央下（H）</strong>：左右と上に壁 → ⊓ の形</li>
+              <li><strong>右下（I）</strong>：左と上に壁 → ┌ の形</li>
+            </ul>
+            <p><strong>J〜R</strong>は、A〜Iと同じ形に<strong>ドット（・）を追加</strong>したものです。</p>
+            
+            <h5>3. X字グリッドの読み方（S〜Z）</h5>
+            <p>X字の4つの区画と、その延長線上の位置を使用します：</p>
+            <ul>
+              <li><strong>左上区画（S）</strong>：∨ の形</li>
+              <li><strong>右上区画（T）</strong>：＞ の形</li>
+              <li><strong>左下区画（U）</strong>：＜ の形</li>
+              <li><strong>右下区画（V）</strong>：∧ の形</li>
+            </ul>
+            <p><strong>W〜Z</strong>は、S〜Vと同じ形に<strong>ドット（・）を追加</strong>したものです。</p>
+            
+            <h5>4. 実際の使用例</h5>
+            <p>たとえば「HELLO」を暗号化すると：</p>
+            <ul>
+              <li><strong>H</strong> → ⊓（中央下のグリッド形状）</li>
+              <li><strong>E</strong> → □（中央のグリッド形状）</li>
+              <li><strong>L</strong> → └・（右上のグリッド形状＋ドット）</li>
+              <li><strong>L</strong> → └・（同上）</li>
+              <li><strong>O</strong> → <span style="display:inline-block; transform: rotate(180deg);">コ</span>・（右中のグリッド形状＋ドット）</li>
+            </ul>
+          </div>
+          
+          <p><strong>💡 覚えるコツ：</strong></p>
+          <ul>
+            <li>グリッドの位置と壁の関係を視覚的に理解する</li>
+            <li>ドットなし（A〜I、S〜V）とドットあり（J〜R、W〜Z）の規則性を把握</li>
+            <li>実際に紙に書いて練習すると覚えやすい</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 学習３：解読のTIPS -->
+      <div class="learning-section">
+        <h3>学習３：暗号解読のTIPS</h3>
+        <div class="learn-content">
+          <p>ピッグペン暗号を効率的に解読するための重要なポイント：</p>
+          
+          <div class="tips-highlight">
+            <h4>🔑 最重要：ピッグペン暗号は単一換字式暗号の一種</h4>
+            <p><strong>ピッグペン暗号の解読は2段階のプロセスです：</strong></p>
+            <ol>
+              <li><strong>グリフ → アルファベット変換</strong>：各グリフ（図形）がどのアルファベットに対応するかを特定</li>
+              <li><strong>単一換字式暗号の解読法を適用</strong>：通常の暗号解読テクニックをそのまま使用</li>
+            </ol>
+            <p>つまり、グリフをアルファベットに置き換えてしまえば、あとは通常の単一換字式暗号として解読できます！</p>
+          </div>
+          
+          <h4>🔍 頻度分析を活用する</h4>
+          <ul>
+            <li><strong>E, T, A, O, I, N</strong>：英語でよく使われる文字（頻度順）</li>
+            <li><strong>頻出グリフ = 頻出文字</strong>：もっとも多く登場するグリフは「E」の可能性が高い</li>
+            <li><strong>短い単語</strong>：「THE」「AND」「OF」などを探す</li>
+            <li><strong>1文字の単語</strong>：「A」「I」の可能性が高い</li>
+          </ul>
+
+          <h4>📝 パターンを見つける</h4>
+          <ul>
+            <li><strong>同じグリフの繰り返し</strong>：同じグリフが繰り返し出現する場合、頻出文字の可能性</li>
+            <li><strong>単語の境界</strong>：スペースがある場合は単語の区切りを活用</li>
+            <li><strong>文章の構造</strong>：英語の一般的な単語パターンを考慮</li>
+            <li><strong>二重文字</strong>：「LL」「EE」「SS」などの二重文字パターンを探す</li>
+          </ul>
+
+          <h4>🎯 具体的な解読手順</h4>
+          <ol>
+            <li><strong>グリフの種類を数える</strong>：暗号文に何種類のグリフが使われているか確認</li>
+            <li><strong>頻度分析</strong>：各グリフの出現回数をカウント</li>
+            <li><strong>仮説設定</strong>：もっとも頻出するグリフを「E」と仮定</li>
+            <li><strong>単語推測</strong>：短い単語（THE, AND, OF）から推測を始める</li>
+            <li><strong>置換表作成</strong>：判明したグリフ→文字の対応を記録</li>
+            <li><strong>検証・修正</strong>：矛盾があれば仮説を修正</li>
+          </ol>
+
+          <h4>📊 英語の文字頻度（参考）</h4>
+          <ul>
+            <li><strong>高頻度</strong>：E (12.7%), T (9.1%), A (8.2%), O (7.5%), I (7.0%), N (6.7%)</li>
+            <li><strong>中頻度</strong>：S (6.3%), H (6.1%), R (6.0%), D (4.3%), L (4.0%)</li>
+            <li><strong>低頻度</strong>：Q (0.1%), X (0.2%), Z (0.1%)</li>
+          </ul>
+
+          <div class="tips-highlight">
+            <h4>💡 実践的なアドバイス</h4>
+            <p>このアプリケーションの復号タブを使って、実際に暗号文を入力しながら解読を試してみましょう。グリフをクリックして文字を入力し、意味のある単語ができるまで試行錯誤してみてください！</p>
+            <p><strong>覚えておくべきこと：</strong>ピッグペン暗号は見た目は複雑ですが、本質的には単純な単一換字式暗号です。グリフをアルファベットに置き換えることができれば、あとは通常の暗号解読手法が使えます。</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -80,6 +245,81 @@
       🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/pigpen-cipherlab" target="_blank">ipusiron/pigpen-cipherlab</a> ）
     </div>
   </footer>
+
+  <!-- ヘルプモーダル -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📖 Pigpen CipherLab ヘルプ</h2>
+        <span class="close-button">&times;</span>
+      </div>
+      <div class="modal-body">
+        <section class="help-section">
+          <h3>🔐 暗号化タブの使い方</h3>
+          <ol>
+            <li><strong>換字表を選択</strong>：使用したいグリフセット（1〜3）を選びます</li>
+            <li><strong>空白処理を設定</strong>：空白を無視するか保持するかを選択</li>
+            <li><strong>テキストを入力</strong>：暗号化したい英文を入力欄に記入</li>
+            <li><strong>リアルタイム暗号化</strong>：入力と同時に自動的にグリフに変換されます</li>
+            <li><strong>換字表の確認</strong>：使用中の文字は黄色、直近の文字は赤色でハイライトされます</li>
+          </ol>
+        </section>
+
+        <section class="help-section">
+          <h3>🔓 復号タブの使い方</h3>
+          <ol>
+            <li><strong>換字表を選択</strong>：暗号文に使用されたグリフセットを選びます</li>
+            <li><strong>グリフをクリック</strong>：各グリフをクリックして対応する文字を入力</li>
+            <li><strong>空白の入力</strong>：「空白」ボタンでスペースを入力</li>
+            <li><strong>文字の削除</strong>：「DEL」ボタンで最後の文字を削除</li>
+            <li><strong>結果のコピー</strong>：「コピー」ボタンで復号結果をクリップボードにコピー</li>
+            <li><strong>リセット</strong>：「リセット」ボタンで復号結果をクリア</li>
+          </ol>
+        </section>
+
+        <section class="help-section">
+          <h3>📘 座学タブの使い方</h3>
+          <ul>
+            <li><strong>学習1</strong>：ピッグペン暗号の歴史と基本概念を学習</li>
+            <li><strong>学習2</strong>：換字表の詳しい読み方を理解
+              <ul>
+                <li>3×3グリッドとX字グリッドの構造</li>
+                <li>各位置とグリフ形状の対応関係</li>
+                <li>ドットの有無による文字の区別</li>
+              </ul>
+            </li>
+            <li><strong>学習3</strong>：暗号解読のテクニックを習得
+              <ul>
+                <li>頻度分析の活用方法</li>
+                <li>パターン認識のコツ</li>
+                <li>単一換字式暗号としての解読法</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3>💡 便利な機能</h3>
+          <ul>
+            <li><strong>グリフセット切り替え</strong>：異なる暗号パターンを試せます</li>
+            <li><strong>リアルタイム変換</strong>：入力と同時に暗号化が進みます</li>
+            <li><strong>視覚的フィードバック</strong>：使用中の文字がハイライトされます</li>
+            <li><strong>コピー機能</strong>：復号結果を簡単にコピーできます</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3>🎯 学習のコツ</h3>
+          <ul>
+            <li>まず座学タブで基本を理解してから実践しましょう</li>
+            <li>簡単な単語（THE、AND、OF）から練習を始めます</li>
+            <li>換字表を見ながら、グリフの形と文字の関係を覚えましょう</li>
+            <li>実際に紙に書いて練習すると、より早く習得できます</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
