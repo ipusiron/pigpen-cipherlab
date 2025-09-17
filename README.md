@@ -1,3 +1,14 @@
+<!--
+---
+title: Pigpen CipherLab
+category: classical-cryptography
+difficulty: 1
+description: Visual tool to encrypt, decrypt, and learn the Pigpen cipher. Explore 3 glyph sets interactively through encryption, decryption, and study tabs.
+tags: [pigpen-cipher, classical-cipher, classical-cryptography, cryptography, visualization, glyph, education]
+demo: https://ipusiron.github.io/pigpen-cipherlab/
+---
+-->
+
 # Pigpen CipherLab - ピッグペン暗号ビジュアル学習ツール
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/ipusiron/pigpen-cipherlab?style=social)
@@ -85,7 +96,11 @@
 
 **ピッグペン暗号（Pigpen Cipher）** は、アルファベットを特殊な記号（三目並べのようなマス目から取った記号）に置き換える単一換字暗号です。
 
-呼び名は「ビックペン」ではなく、「ピッグペン」です。
+"Pigpen"は英語で「豚小屋」を意味し、この暗号がそう呼ばれる由来は、暗号の記号を作るために使用される3×3のマス目（グリッド）が豚を閉じ込める囲いの形に似ているためです。三目並べ（tic-tac-toe）のような格子模様が豚の囲いを連想させることから、この名前が付けられました。
+
+ちなみに、"Pigpen"の呼び名は「ビックペン」ではなく、「ピッグペン」です。
+
+### フリーメイソンの暗号とも呼ばれる
 
 秘密結社フリーメイソンが18世紀に団員相互間の秘密通信や議事録の記録に使用されていたといわれており、フリーメイソンの暗号とも呼ばれます。
 また、秘密結社バラ十字会員の暗号（Rosicrucian Cipher）と呼ばれるものも、ピッグペン暗号になります。
@@ -119,7 +134,7 @@
 
 ---
 
-## 暗号化の例
+## 🔤 暗号化の例
 
 "X marks the spot"という英文を換字表1で暗号化すると、以下のようになります。
 
@@ -131,7 +146,7 @@
 
 ---
 
-## ピッグペン暗号文の解読アプローチ
+## 🔍 ピッグペン暗号文の解読アプローチ
 
 1: ピッグペン暗号文に登場する記号を抽出して、リスト化する。
 それと同時に各記号の登場数をカウントしておく。
@@ -169,9 +184,9 @@ pigpen-cipherlab/
 
 ---
 
-## 私が関与したもの参考文献等
+## 📚 参考リソース
 
-### 書籍
+### 書籍（私が関与したもの）
 
 - [『暗号解読 実践ガイド』](https://akademeia.info/?page_id=39995)
     - P.34 NSAのマグカップに印字されたピッグペン暗号文
@@ -179,7 +194,7 @@ pigpen-cipherlab/
     - P.83 Andre Langieが解読したピッグペン暗号文
     - P.438 索引にバリエーションの1つが紹介されている。本ツールの換字表2に相当。
 
-### ツール
+### ツール（自作）
 
 - [ヒルクライミング法による単一換字式暗号の解読ツール](https://github.com/ipusiron/cipherclimb)
 
