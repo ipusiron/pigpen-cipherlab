@@ -1,11 +1,37 @@
 <!--
 ---
-title: Pigpen CipherLab
-category: classical-cryptography
+id: day032
+slug: pigpen-cipherlab
+
+title: "Pigpen CipherLab"
+
+subtitle_ja: "ピッグペン暗号ビジュアル学習ツール"
+subtitle_en: "Visual Learning Tool for Pigpen Cipher"
+
+description_ja: "ピッグペン暗号を「見て・触って・学べる」Webツール。3つのタブ（暗号化・復号・座学）で直感的に理解を深められます。3種類のグリフセット対応。"
+description_en: "Visual tool to encrypt, decrypt, and learn the Pigpen cipher. Explore 3 glyph sets interactively through encryption, decryption, and study tabs."
+
+category_ja:
+  - 古典暗号
+  - 換字式暗号
+category_en:
+  - Classical Cryptography
+  - Substitution Cipher
+
 difficulty: 1
-description: Visual tool to encrypt, decrypt, and learn the Pigpen cipher. Explore 3 glyph sets interactively through encryption, decryption, and study tabs.
-tags: [pigpen-cipher, classical-cipher, classical-cryptography, cryptography, visualization, glyph, education]
-demo: https://ipusiron.github.io/pigpen-cipherlab/
+
+tags:
+  - pigpen-cipher
+  - classical-cipher
+  - cryptography
+  - visualization
+  - education
+  - freemason-cipher
+
+repo_url: "https://github.com/ipusiron/pigpen-cipherlab"
+demo_url: "https://ipusiron.github.io/pigpen-cipherlab/"
+
+hub: true
 ---
 -->
 
