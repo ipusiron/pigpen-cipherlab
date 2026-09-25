@@ -1,5 +1,5 @@
 <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- V: Top angle (top quadrant) -->
+  <!-- Pigpen set 2: J (x:T:0) -->
   <line x1="50" y1="80" x2="20" y2="20" stroke="black" stroke-width="3"/>
   <line x1="50" y1="80" x2="80" y2="20" stroke="black" stroke-width="3"/>
 </svg>
