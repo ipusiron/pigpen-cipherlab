@@ -1,11 +1,13 @@
 // One cipher state; every dependent view is derived from it.
-const state = { variant: '1', spaceMode: 'ignore', text: '', decodeItems: [] };
+const state = { variant: '1', spaceMode: 'ignore', text: '', decodeItems: [], keyword: '', keywordBase: '1' };
+let currentTable;
+let mappingSignature;
 const encryptGlyphSelect = document.getElementById("encryptGlyphSelect");
 const decryptGlyphSelect = document.getElementById("decryptGlyphSelect");
 const learningGlyphSelect = document.getElementById("learningGlyphSelect");
 
 function changeVariant(event) {
-  if (!PigpenCore.isVariant(event.target.value)) return;
+  if (!PigpenCore.isVariant(event.target.value) && event.target.value !== 'keyword') return;
   state.variant = event.target.value;
   render();
 }
@@ -74,7 +76,7 @@ const warningMessage = document.getElementById("warningMessage");
 
 // 暗号化処理を関数として定義
 function encryptText(result) {
-  const tokens = PigpenCore.encrypt(result.tokens, state.variant);
+  const tokens = PigpenCore.encryptWith(result.tokens, currentTable);
   const usage = PigpenCore.usage(result.tokens);
   cipherOutput.replaceChildren();
 
@@ -91,11 +93,7 @@ function encryptText(result) {
     } else {
       item.className = 'cipher-item';
       item.dataset.shape = token.shape;
-      const img = document.createElement('img');
-      img.src = glyphPath(state.variant, token.letter);
-      img.alt = token.letter;
-      img.title = token.letter;
-      img.className = 'cipher-glyph';
+      const img = createGlyph(token.shape, { className: 'cipher-glyph' });
       const label = document.createElement('span');
       label.className = 'cipher-letter';
       label.textContent = token.letter;
@@ -105,10 +103,29 @@ function encryptText(result) {
   }
 }
 
-// Validate through the model before constructing any per-letter image path.
-function glyphPath(variant, letter) {
-  if (!PigpenCore.shapeOf(letter, variant)) throw new Error('Unknown glyph');
-  return `assets/glyphs/${variant}/${letter}.svg`;
+function svgElement(name, attributes = {}) {
+  const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+  return element;
+}
+
+function createGlyph(shape, options = {}) {
+  const geometry = PigpenCore.geometry(shape);
+  if (!geometry) throw new Error('Unknown shape');
+  const svg = svgElement('svg', { viewBox: '0 0 100 100', class: 'model-glyph ' + (options.className || '') });
+  svg.dataset.shape = shape;
+  if (options.decorative) svg.setAttribute('aria-hidden', 'true');
+  else {
+    svg.setAttribute('role', 'img');
+    const description = i18n.describeShape(shape);
+    svg.setAttribute('aria-label', description);
+    const title = svgElement('title');
+    title.textContent = description;
+    svg.appendChild(title);
+  }
+  geometry.lines.forEach(([x1, y1, x2, y2]) => svg.appendChild(svgElement('line', { x1, y1, x2, y2 })));
+  geometry.dots.forEach(([cx, cy]) => svg.appendChild(svgElement('circle', { cx, cy, r: 4 })));
+  return svg;
 }
 
 plaintextArea.addEventListener('input', () => {
@@ -135,18 +152,15 @@ function updateGlyphButtons() {
     glyphItem.setAttribute('aria-label', i18n.t('decode.key', { letter: char }));
     glyphItem.className = "cipher-item";
     
-    const img = document.createElement("img");
-    img.src = glyphPath(state.variant, char);
-    img.alt = char;
-    img.title = char;
-    img.className = "cipher-glyph";
+    const shape = currentTable[alphabet.indexOf(char)];
+    const img = createGlyph(shape, { className: 'cipher-glyph' });
 
     const letterLabel = document.createElement("span");
     letterLabel.className = "cipher-letter";
     letterLabel.textContent = char;
 
     glyphItem.addEventListener("click", () => {
-      state.decodeItems.push(PigpenCore.shapeOf(char, state.variant));
+      state.decodeItems.push(shape);
       renderReading();
     });
 
@@ -239,10 +253,7 @@ function updateAlphabetReference() {
     letterSpan.className = "reference-letter";
     letterSpan.textContent = char;
     
-    const img = document.createElement("img");
-    img.src = glyphPath(state.variant, char);
-    img.alt = char;
-    img.className = "reference-glyph";
+    const img = createGlyph(currentTable[alphabet.indexOf(char)], { className: 'reference-glyph' });
     
     referenceItem.appendChild(letterSpan);
     referenceItem.appendChild(img);
@@ -253,7 +264,7 @@ function updateAlphabetReference() {
 const keyMappingImage = document.getElementById("keyMappingImage");
 
 function renderReading() {
-  decryptedText.textContent = PigpenCore.decodeSequence(state.decodeItems, state.variant);
+  decryptedText.textContent = PigpenCore.decodeWith(state.decodeItems, currentTable);
   const sequence = document.getElementById('decodeSequence');
   sequence.replaceChildren();
   sequence.setAttribute('aria-label', i18n.t('decode.sequence'));
@@ -263,11 +274,7 @@ function renderReading() {
       spacer.className = shape === '\n' ? 'cipher-newline' : 'cipher-space';
       sequence.appendChild(spacer);
     } else {
-      const source = PigpenCore.glyphSource(shape);
-      const img = document.createElement('img');
-      img.src = glyphPath(source.variant, source.letter);
-      img.alt = '';
-      img.className = 'cipher-glyph';
+      const img = createGlyph(shape, { className: 'cipher-glyph' });
       sequence.appendChild(img);
     }
   }
@@ -277,6 +284,7 @@ function renderReading() {
 }
 
 function render() {
+  currentTable = PigpenCore.tableOf({ variant: state.variant, base: state.keywordBase, keyword: state.keyword });
   [encryptGlyphSelect, decryptGlyphSelect, learningGlyphSelect].forEach(select => {
     select.value = state.variant;
   });
@@ -286,15 +294,73 @@ function render() {
   preserveSpaceBtn.setAttribute('aria-pressed', String(state.spaceMode === 'preserve'));
   currentModeText.textContent = i18n.t(`mode.${state.spaceMode}`);
   const result = PigpenCore.tokenize(state.text, state.spaceMode);
-  updateAlphabetReference();
+  const signature = JSON.stringify([state.variant, state.keyword, state.keywordBase, i18n.language]);
+  if (signature !== mappingSignature) {
+    renderKeywordControls();
+    updateAlphabetReference();
+    updateGlyphButtons();
+    renderMapping();
+    document.querySelectorAll('[data-glyph]').forEach(host => {
+      host.replaceChildren(createGlyph(host.dataset.glyph, { className: 'reading-glyph' }));
+    });
+    mappingSignature = signature;
+  }
   encryptText(result);
   updateWarningMessage(result);
-  updateGlyphButtons();
   renderReading();
-  keyMappingImage.src = `assets/glyphs/${state.variant}/key_mapping.svg`;
-  keyMappingImage.alt = i18n.t('mapping.alt', { variant: state.variant });
-  document.getElementById('mappingNote').textContent = i18n.t(`mapping.${state.variant}`);
   copyToast.textContent = i18n.t(copyMessage);
+}
+
+function renderKeywordControls() {
+  document.querySelectorAll('[data-keyword-panel]').forEach(panel => {
+    panel.hidden = state.variant !== 'keyword';
+    panel.querySelector('input').value = state.keyword;
+    panel.querySelector('select').value = state.keywordBase;
+    panel.querySelector('p').textContent = PigpenCore.keyedAlphabet(state.keyword);
+  });
+}
+
+document.querySelectorAll('[data-keyword-input]').forEach(input => input.addEventListener('input', () => {
+  state.keyword = input.value.slice(0, 40);
+  render();
+}));
+document.querySelectorAll('[data-keyword-base]').forEach(select => select.addEventListener('change', () => {
+  state.keywordBase = select.value;
+  render();
+}));
+
+function renderMapping() {
+  const keyed = state.variant === 'keyword';
+  const host = document.getElementById('keywordMapping');
+  host.hidden = !keyed;
+  keyMappingImage.hidden = keyed;
+  host.replaceChildren();
+  const note = document.getElementById('mappingNote');
+  if (!keyed) {
+    keyMappingImage.src = `assets/glyphs/${state.variant}/key_mapping.svg`;
+    keyMappingImage.alt = i18n.t('mapping.alt', { variant: state.variant });
+    note.textContent = i18n.t(`mapping.${state.variant}`);
+    return;
+  }
+  const alpha = PigpenCore.keyedAlphabet(state.keyword);
+  note.textContent = i18n.t('keyword.note', { base: state.keywordBase, alphabet: alpha });
+  for (const section of PigpenCore.keyLayout(state.keywordBase, alpha)) {
+    const svg = svgElement('svg', { viewBox: '0 0 300 300', class: 'key-diagram', role: 'img' });
+    svg.setAttribute('aria-label', section.letters.join(' '));
+    const lines = section.kind === 'x'
+      ? [[10, 10, 290, 290], [290, 10, 10, 290]]
+      : [[100, 0, 100, 300], [200, 0, 200, 300], [0, 100, 300, 100], [0, 200, 300, 200]];
+    lines.forEach(([x1, y1, x2, y2]) => svg.appendChild(svgElement('line', { x1, y1, x2, y2 })));
+    section.letters.forEach((letters, index) => {
+      const [x, y] = section.kind === 'x' ? [[150, 50], [50, 150], [250, 150], [150, 250]][index]
+        : [50 + index % 3 * 100, 50 + Math.floor(index / 3) * 100];
+      const text = svgElement('text', { x, y });
+      text.textContent = letters;
+      svg.appendChild(text);
+      if (section.dots) svg.appendChild(svgElement('circle', { cx: x, cy: y + 24, r: 4 }));
+    });
+    host.appendChild(svg);
+  }
 }
 
 i18n.init();

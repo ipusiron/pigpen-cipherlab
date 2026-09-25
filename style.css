@@ -770,7 +770,7 @@ header button:focus-visible,
   padding: 0.5rem;
 }
 
-.decode-sequence img {
+.decode-sequence .model-glyph {
   flex: 0 0 60px;
   box-sizing: border-box;
 }
@@ -868,6 +868,60 @@ header {
 #languageButton {
   display: block;
   margin: 0.5rem auto;
+}
+
+:root {
+  --glyph-ink: #111111;
+}
+
+.model-glyph line,
+.key-diagram line {
+  stroke: var(--glyph-ink);
+  stroke-width: 3;
+}
+
+.model-glyph circle,
+.key-diagram circle,
+.key-diagram text {
+  fill: var(--glyph-ink);
+}
+
+.key-diagram text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+}
+
+.keyword-settings {
+  max-width: 100%;
+}
+
+.keyword-settings input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  font: inherit;
+}
+
+.keyword-alphabet {
+  overflow-wrap: anywhere;
+}
+
+.keyword-mapping {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.key-diagram {
+  width: 180px;
+  max-width: 100%;
+  background: var(--surface);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 @media (min-width: 769px) {

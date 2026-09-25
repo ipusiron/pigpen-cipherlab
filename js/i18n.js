@@ -321,6 +321,36 @@ const i18n = (() => {
     "help.frequency": "Using frequency analysis",
   };
 
+  Object.assign(ja, {
+    'keyword.option': 'キーワード', 'keyword.label': 'キーワード（最大40文字）', 'keyword.base': '基にする換字表',
+    'keyword.note': '換字表{base}の置き場所に、{alphabet}の順に文字を入れたキーワード表です。',
+    'shape.T': '上', 'shape.R': '右', 'shape.B': '下', 'shape.L': '左',
+    'shape.join': 'と', 'shape.walls': '{parts}に壁', 'shape.all': '四方に壁',
+    'shape.dots': '・点{count}つ', 'shape.dot': '・点{count}つ',
+    'shape.xT': 'X字の上の区画（V の字）', 'shape.xL': 'X字の左の区画',
+    'shape.xR': 'X字の右の区画', 'shape.xB': 'X字の下の区画'
+  });
+  Object.assign(en, {
+    'keyword.option': 'Keyword', 'keyword.label': 'Keyword (up to 40 characters)', 'keyword.base': 'Base mapping',
+    'keyword.note': 'Keyword mapping based on mapping {base}: place the letters in this order: {alphabet}.',
+    'shape.T': 'top', 'shape.R': 'right', 'shape.B': 'bottom', 'shape.L': 'left',
+    'shape.join': ' and ', 'shape.walls': 'walls on the {parts}', 'shape.all': 'walls on all four sides',
+    'shape.dots': ', {count} dots', 'shape.dot': ', {count} dot',
+    'shape.xT': 'top section of the X (V shape)', 'shape.xL': 'left section of the X',
+    'shape.xR': 'right section of the X', 'shape.xB': 'bottom section of the X'
+  });
+
+  function describeShape(shape, locale = language) {
+    const core = typeof PigpenCore !== 'undefined' ? PigpenCore : require('./pigpen-core.js');
+    const s = core.parseShape(shape);
+    if (!s) return '';
+    const dict = locale === 'en' ? en : ja;
+    const parts = [...'TRBL'].filter(p => s.part.includes(p)).map(p => dict['shape.' + p]).join(dict['shape.join']);
+    const description = s.kind === 'x' ? dict['shape.x' + s.part]
+      : s.part.length === 4 ? dict['shape.all'] : dict['shape.walls'].replace('{parts}', parts);
+    return description + (s.dots ? dict[s.dots === 1 ? 'shape.dot' : 'shape.dots'].replace('{count}', s.dots) : '');
+  }
+
   let language = 'ja';
 
   function t(key, values = {}) {
@@ -366,7 +396,7 @@ const i18n = (() => {
     apply();
   }
 
-  return { ja, en, t, init, apply, setLanguage, get language() { return language; } };
+  return { ja, en, t, init, apply, setLanguage, describeShape, get language() { return language; } };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = i18n;
