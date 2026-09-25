@@ -137,8 +137,8 @@ button:hover {
   margin: 1rem 0;
 }
 
-.glyph-grid img,
-.glyph-output img {
+.glyph-grid .model-glyph,
+.glyph-output .model-glyph {
   width: 60px;
   height: 60px;
   cursor: pointer;
@@ -725,6 +725,7 @@ select {
 }
 
 button:focus-visible,
+input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 a:focus-visible {
@@ -770,7 +771,7 @@ header button:focus-visible,
   padding: 0.5rem;
 }
 
-.decode-sequence img {
+.decode-sequence .model-glyph {
   flex: 0 0 60px;
   box-sizing: border-box;
 }
@@ -868,6 +869,141 @@ header {
 #languageButton {
   display: block;
   margin: 0.5rem auto;
+}
+
+:root {
+  --glyph-ink: #111111;
+}
+
+.model-glyph line,
+.key-diagram line {
+  stroke: var(--glyph-ink);
+  stroke-width: 3;
+}
+
+.model-glyph circle,
+.key-diagram circle,
+.key-diagram text {
+  fill: var(--glyph-ink);
+}
+
+.key-diagram text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+}
+
+.keyword-settings {
+  max-width: 100%;
+}
+
+.keyword-settings input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  font: inherit;
+}
+
+.keyword-alphabet {
+  overflow-wrap: anywhere;
+}
+
+.keyword-mapping {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--muted-text);
+}
+
+.rank-badge {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.exercise-cipher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.exercise-word {
+  display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.exercise-symbol {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+}
+
+.exercise-symbol svg {
+  width: 28px;
+  height: 28px;
+}
+
+.exercise-analysis {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.exercise-analysis td svg {
+  width: 44px;
+  height: 44px;
+}
+
+.exercise-analysis dl {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.guess-conflict select {
+  outline: 3px solid var(--error-bg);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+@media (min-width: 769px) {
+  .exercise-analysis {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+.key-diagram {
+  width: 180px;
+  max-width: 100%;
+  background: var(--surface);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 @media (min-width: 769px) {

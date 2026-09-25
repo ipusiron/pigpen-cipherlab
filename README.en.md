@@ -11,7 +11,7 @@ English · [日本語](README.md)
 **Day032 - 100 Security Tools with Generative AI**
 
 Pigpen CipherLab is a web tool for seeing, exploring and learning the classical Pigpen cipher.
-Three tabs—Encrypt, Decrypt and Learn—provide an interactive view of three synchronized key mappings.
+Four tabs—Encrypt, Decrypt, Learn and Exercises—explore three standard mappings, keyword mappings and frequency analysis.
 
 ---
 
@@ -25,19 +25,36 @@ Three tabs—Encrypt, Decrypt and Learn—provide an interactive view of three s
 
 ![English Learn tab](assets/en/screenshot.png)
 
-*English Learn tab: lesson 2, the set 1 key mapping and the start of the reading guide with symbol images.*
+*English Learn tab: lesson 2, set 1 and model-drawn symbols in the reading guide. 1280×1000, 65,810 bytes.*
+
+![English keyword mapping](assets/en/screenshot2.png)
+
+*English Learn tab: PIGPEN with base 1, its diagram and explanation. 1280×1000, 45,695 bytes.*
 
 !["hello world." encrypted](assets/screenshot.png)
 
-*Japanese Encrypt tab: set 1, Preserve whitespace, input hello world. The highlighted reference and both warnings are visible.*
+*Japanese Encrypt tab: set 1, Preserve whitespace, input hello world. Reference highlights and both warnings. 1280×1000, 46,097 bytes.*
 
 ![Rereading with set 2](assets/screenshot2.png)
 
-*Japanese Decrypt tab: enter HELLO WORLD with set 1, then choose set 2 to read the same symbols as HEPPS WSVPD.*
+*Japanese Decrypt tab: enter HELLO WORLD with set 1, then reread with set 2 as HEPPS WSVPD. 1280×1000, 52,682 bytes.*
+
+![Variant ranking](assets/screenshot3.png)
+
+*Japanese Decrypt tab: shape-only keys, sample 2, mapping 2 ranked first. 1280×1000, 64,775 bytes.*
+
+![Exercise in progress](assets/screenshot4.png)
+
+*Japanese exercise: lincoln after three hints, showing guesses and symbol frequencies. 1280×1000, 40,872 bytes.*
 
 ---
 
 ## ✨ Features
+
+- **Variant ranking**: enter symbols using 43 shape-only keys and compare three standard mappings and a configured keyword mapping
+- **Keyword mappings**: use a keyword of up to 40 characters and a base mapping; synchronize Encrypt, Decrypt and Learn
+- **Cryptanalysis exercises**: solve five English excerpts with a fresh random substitution and symbol-frequency hints
+- **Model-driven symbols**: generate SVG lines and dots from shape IDs without loading individual symbol images
 
 ### 📱 Tabs
 
@@ -46,6 +63,7 @@ Three tabs—Encrypt, Decrypt and Learn—provide an interactive view of three s
 | 🔐 Encrypt | Convert text into Pigpen glyphs immediately, with letter highlighting |
 | 🔓 Decrypt | Enter a symbol sequence and reread it with the selected key mapping; copy the result |
 | 📘 Learn | Study the history, structure and cryptanalysis of the cipher |
+| 🧩 Exercises | Guess letters from symbol frequencies; use Hint, Show answer, Clear and New problem |
 
 ### 🔐 Encrypt tab
 
@@ -98,6 +116,14 @@ Three tabs—Encrypt, Decrypt and Learn—provide an interactive view of three s
 2. Choose Preserve and inspect the highlights, warnings and ciphertext.
 3. In Decrypt, enter HELLO WORLD using set 1, then switch to set 2. The same symbols now read HEPPS WSVPD.
 4. Use Learn to compare diagrams and notes for each key mapping.
+5. Select Keyword, then enter a keyword and choose a base mapping. The three mapping selectors and alphabet stay synchronized.
+6. In Decrypt, choose Shapes only (all 43) or a sample. Compare candidates and choose Read with this mapping to reread the sequence.
+7. In Exercises, choose a source and press New problem. Assign letters with the frequency-table selectors and use hints when needed.
+
+Hint fills one incorrect or unanswered symbol, choosing the most frequent first.
+Assigning one letter to multiple symbols shows a warning. A correct solution shows Solved and the source; Show answer produces a separate Answer shown message.
+Clear removes guesses. New problem clears guesses and creates a fresh substitution.
+Problems use `crypto.getRandomValues`; when unavailable, the tool explains why it cannot create a problem.
 
 There is no separate Encrypt button: conversion happens as you type. Whitespace-only input follows the selected mode.
 Switching mappings keeps the symbol sequence; symbols absent from the selected mapping are shown as ?.
@@ -170,6 +196,43 @@ Nine symbols in set 3 also occur in set 1. Reading the same set 1 sequence with 
 
 ---
 
+To build a keyword mapping, normalize the keyword, remove repeated letters, and append the remaining letters in A–Z order.
+Place this alphabet into the positions of the base mapping. An empty keyword keeps the ordinary alphabet.
+
+| Keyword | Base | Alphabet | HELLO symbol IDs |
+|---|---|---|---|
+| PIGPEN | 1 | PIGENABCDFHJKLMOQRSTUVWXYZ | H=g:RBL:1 E=g:TRB:0 L=g:TRBL:1 L=g:TRBL:1 O=g:TR:1 |
+| KRYPTOS | 3 | KRYPTOSABCDEFGHIJLMNQUVWXZ | H=g:TRBL:3 E=g:TRB:3 L=g:TBL:3 L=g:TBL:3 O=g:RBL:3 |
+
+Variant ranking orders candidates by fewer unknown symbols, then by the higher mean log10 of the readable letters' English frequencies.
+This is a letter-frequency heuristic, not a test of word meaning, and can be wrong for short sequences.
+
+| Symbol sequence | Top mapping | Reading |
+|---|---|---|
+| HELLO WORLD / 1 | 1 | HELLO WORLD |
+| HELLO WORLD / 2 | 2 | HELLO WORLD |
+| HELLO WORLD / 3 | 3 | HELLO WORLD |
+
+The union of the mappings contains 43 shapes. Symbols are drawn as lines and dots in a 100×100 view box.
+Tests verify that the drawing data matches all 78 existing SVG files exactly in line and dot coordinates.
+
+---
+
+## 🧩 Exercise Texts
+
+These five excerpts are public-domain texts whose copyright terms have expired. Counts include only letters used in the exercises.
+The texts themselves are not reproduced in this README. Each new problem has a fresh substitution; input and guesses are not saved or sent.
+
+| Source | Letters |
+|---|---|
+| Charles Dickens, A Tale of Two Cities (1859) | 82 |
+| Herman Melville, Moby-Dick (1851) | 80 |
+| Jane Austen, Pride and Prejudice (1813) | 92 |
+| Declaration of Independence (1776) | 117 |
+| Abraham Lincoln, Gettysburg Address (1863) | 90 |
+
+---
+
 ## 🔤 Encryption Example
 
 The phrase “X marks the spot” encrypted with set 1 looks like this:
@@ -226,11 +289,12 @@ GitHub Actions runs the same tests on push and pull_request.
 | File | Coverage |
 |---|---|
 | core.test.js | Three mappings, normalization, encryption, rereading, lines and dots of all 78 SVGs |
+| core2.test.js | Drawing coordinates, keyword tables, variant ranking and exercise known answers |
 | html.test.js | CSP, ARIA, labels and prohibited DOM operations |
 | i18n.test.js | Matching dictionary keys and placeholders; untranslated Japanese literals |
-| contrast.test.js | Eight CSS-variable pairs at or above 4.5:1 |
+| contrast.test.js | Ten CSS-variable pairs at or above 4.5:1 |
 | format.test.js | Maximum line lengths and minimum line counts |
-| readme.test.js | Recompute four known-answer rows; 15 matched sections, trees, images and YAML |
+| readme.test.js | Recompute known answers, keyword/ranking examples; five sources, 16 sections, trees, six screenshots and YAML |
 
 ---
 
@@ -243,7 +307,8 @@ pigpen-cipherlab/                 # Project root
 │       └── test.yml              # Run npm test on push and pull_request
 ├── assets/                       # Images
 │   ├── en/                       # English screenshots
-│   │   └── screenshot.png        # Learn tab: reading set 1
+│   │   ├── screenshot.png        # Learn tab: reading set 1
+│   │   └── screenshot2.png       # Learn tab: PIGPEN with base 1
 │   ├── glyphs/                   # Glyph images by key mapping
 │   │   ├── 1/                    # Set 1: Wikipedia arrangement
 │   │   │   ├── A.svg〜Z.svg      # Letter glyphs (26 files)
@@ -256,13 +321,16 @@ pigpen-cipherlab/                 # Project root
 │   │       └── key_mapping.svg   # Key mapping diagram
 │   ├── ciphertext.png            # README example: X marks the spot
 │   ├── screenshot.png            # Encrypt tab: hello world.
-│   └── screenshot2.png           # Decrypt tab: rereading the symbols with set 2
+│   ├── screenshot2.png           # Decrypt tab: rereading the symbols with set 2
+│   ├── screenshot3.png           # Variant ranking: sample 2
+│   └── screenshot4.png           # Exercise: lincoln after three hints
 ├── js/                           # Scripts separated from the UI
 │   ├── i18n.js                   # Japanese/English dictionaries and language selection
 │   └── pigpen-core.js            # Pure symbol model, normalization, encryption and rereading
 ├── test/                         # Automated tests (node --test)
 │   ├── contrast.test.js          # Color contrast ratios
 │   ├── core.test.js              # Known answers and shapes of all 78 glyphs
+│   ├── core2.test.js             # Extension known answers and 78 drawing geometries
 │   ├── format.test.js            # Maximum line lengths and minimum line counts
 │   ├── html.test.js              # CSP, ARIA and prohibited patterns
 │   ├── i18n.test.js              # Dictionary keys and untranslated Japanese literals
@@ -273,7 +341,7 @@ pigpen-cipherlab/                 # Project root
 ├── LICENSE                       # MIT license
 ├── README.en.md                  # English documentation
 ├── README.md                     # Japanese documentation
-├── index.html                    # Three-tab interface
+├── index.html                    # Four-tab interface
 ├── package.json                  # npm test configuration (no dependencies)
 ├── script.js                     # State and UI rendering
 └── style.css                     # Styles

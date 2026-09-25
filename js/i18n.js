@@ -56,30 +56,30 @@ const i18n = (() => {
     "ui.36": "X字グリッド：S〜Zの8文字を配置",
     "ui.37": "2. 3×3グリッドの読み方（A〜R）",
     "ui.38": "各マス目の位置によって、そのマスを囲む「壁」の形が決まります",
-    "ui.39": "左上（A）：右と下に壁 → ┘ の形",
-    "ui.40": "中央上（B）：左右と下に壁 → ⊔ の形",
-    "ui.41": "右上（C）：左と下に壁 → └ の形",
-    "ui.42": "左中（D）：上下と右に壁 → コ の形",
-    "ui.43": "中央（E）：四方に壁 → □ の形",
+    "ui.39": "左上（A）：右と下に壁",
+    "ui.40": "中央上（B）：左右と下に壁",
+    "ui.41": "右上（C）：左と下に壁",
+    "ui.42": "左中（D）：上下と右に壁",
+    "ui.43": "中央（E）：四方に壁",
     "ui.44": "右中（F）：上下と左に壁",
-    "ui.45": "左下（G）：上と右に壁 → ┐ の形",
-    "ui.46": "中央下（H）：左右と上に壁 → ⊓ の形",
-    "ui.47": "右下（I）：左と上に壁 → ┌ の形",
+    "ui.45": "左下（G）：上と右に壁",
+    "ui.46": "中央下（H）：左右と上に壁",
+    "ui.47": "右下（I）：左と上に壁",
     "ui.48": "J〜Rは、A〜Iと同じ形にドット（・）を追加したものです。",
     "ui.49": "3. X字グリッドの読み方（S〜Z）",
     "ui.50": "X字の4つの区画と、その延長線上の位置を使用します",
-    "ui.51": "上の区画（S）：Vの字の形",
-    "ui.52": "左の区画（T）：＞ の形",
-    "ui.53": "右の区画（U）：＜ の形",
-    "ui.54": "下の区画（V）：∧ の形",
+    "ui.51": "X字の上の区画（S）",
+    "ui.52": "X字の左の区画（T）",
+    "ui.53": "X字の右の区画（U）",
+    "ui.54": "X字の下の区画（V）",
     "ui.55": "W〜Zは、S〜Vと同じ形にドット（・）を追加したものです。",
     "ui.56": "4. 実際の使用例",
     "ui.57": "たとえば「HELLO」を暗号化すると",
-    "ui.58": "H → ⊓（中央下のグリッド形状）",
-    "ui.59": "E → □（中央のグリッド形状）",
-    "ui.60": "L → └・（右上のグリッド形状＋ドット）",
-    "ui.61": "L → └・（同上）",
-    "ui.62": "O → 右中のグリッド形状＋ドット",
+    "ui.58": "H（中央下のグリッド形状）",
+    "ui.59": "E（中央のグリッド形状）",
+    "ui.60": "L（右上のグリッド形状＋ドット）",
+    "ui.61": "L（同上）",
+    "ui.62": "O：右中のグリッド形状＋ドット",
     "ui.63": "💡 覚えるコツ",
     "ui.64": "グリッドの位置と壁の関係を視覚的に理解する",
     "ui.65": "ドットなし（A〜I、S〜V）とドットあり（J〜R、W〜Z）の規則性を把握",
@@ -117,7 +117,7 @@ const i18n = (() => {
     "ui.97": "覚えておくべきこと：ピッグペン暗号は見た目は複雑ですが、本質的には単純な単一換字式暗号です。グリフをアルファベットに置き換えることができれば、あとは通常の暗号解読手法が使えます。",
     "ui.98": "📖 Pigpen CipherLab ヘルプ",
     "ui.99": "🔐 暗号化タブの使い方",
-    "ui.100": "換字表を選択：使用したいグリフセット（1〜3）を選びます",
+    "ui.100": "換字表を選択：1〜3またはキーワードを選びます",
     "ui.101": "空白処理を設定：空白を無視するか保持するかを選択",
     "ui.102": "テキストを入力：暗号化したい英文を入力欄に記入",
     "ui.103": "リアルタイム暗号化：入力と同時に自動的にグリフに変換されます",
@@ -152,7 +152,7 @@ const i18n = (() => {
     "language": "English",
     "languageLabel": "英語に切り替え",
     "title": "Pigpen CipherLab - ピッグペン暗号",
-    "footer": "🔗 GitHubリポジトリ",
+    "footer": "🔗 GitHubリポジトリー",
     "help.lesson2": "学習2：換字表の詳しい読み方を理解",
     "help.lesson3": "学習3：暗号解読のテクニックを習得",
     "help.grids": "3×3グリッドとX字グリッドの構造",
@@ -217,30 +217,30 @@ const i18n = (() => {
     "ui.36": "X-shaped grids: the 8 letters S–Z",
     "ui.37": "2. Reading the 3×3 grids (A–R)",
     "ui.38": "The position of a cell determines the walls that form its symbol.",
-    "ui.39": "Top left (A): right and bottom walls → ┘",
-    "ui.40": "Top middle (B): left, right and bottom walls → ⊔",
-    "ui.41": "Top right (C): left and bottom walls → └",
+    "ui.39": "Top left (A): right and bottom walls",
+    "ui.40": "Top middle (B): left, right and bottom walls",
+    "ui.41": "Top right (C): left and bottom walls",
     "ui.42": "Middle left (D): top, bottom and right walls",
-    "ui.43": "Center (E): walls on all four sides → □",
+    "ui.43": "Center (E): walls on all four sides",
     "ui.44": "Middle right (F): top, bottom and left walls",
-    "ui.45": "Bottom left (G): top and right walls → ┐",
-    "ui.46": "Bottom middle (H): left, right and top walls → ⊓",
-    "ui.47": "Bottom right (I): left and top walls → ┌",
+    "ui.45": "Bottom left (G): top and right walls",
+    "ui.46": "Bottom middle (H): left, right and top walls",
+    "ui.47": "Bottom right (I): left and top walls",
     "ui.48": "J–R have the same shapes as A–I, with a dot added.",
     "ui.49": "3. Reading the X-shaped grids (S–Z)",
     "ui.50": "Use the four regions of the X-shaped grid.",
-    "ui.51": "Top region (S): V shape",
-    "ui.52": "Left region (T): > shape",
-    "ui.53": "Right region (U): < shape",
-    "ui.54": "Bottom region (V): ∧ shape",
+    "ui.51": "Top section of the X (S)",
+    "ui.52": "Left section of the X (T)",
+    "ui.53": "Right section of the X (U)",
+    "ui.54": "Bottom section of the X (V)",
     "ui.55": "W–Z have the same shapes as S–V, with a dot added.",
     "ui.56": "4. A worked example",
     "ui.57": "For example, HELLO is encrypted as follows.",
-    "ui.58": "H → ⊓ (bottom-middle cell)",
-    "ui.59": "E → □ (center cell)",
-    "ui.60": "L → └ with a dot (top-right cell plus a dot)",
-    "ui.61": "L → └ with a dot (the same symbol)",
-    "ui.62": "O → middle-right cell plus a dot",
+    "ui.58": "H (bottom-middle cell)",
+    "ui.59": "E (center cell)",
+    "ui.60": "L (top-right cell plus a dot)",
+    "ui.61": "L (the same symbol)",
+    "ui.62": "O: middle-right cell plus a dot",
     "ui.63": "💡 Memory tips",
     "ui.64": "Visualize how each position determines its surrounding walls.",
     "ui.65": "Notice the groups without dots (A–I, S–V) and with dots (J–R, W–Z).",
@@ -279,7 +279,7 @@ const i18n = (() => {
       + "assigning letters to glyphs, familiar cryptanalysis methods apply.",
     "ui.98": "📖 Pigpen CipherLab help",
     "ui.99": "🔐 Using the Encrypt tab",
-    "ui.100": "Choose a key mapping: select one of the three glyph sets.",
+    "ui.100": "Choose a key mapping: select 1–3 or Keyword.",
     "ui.101": "Set whitespace handling: choose whether to ignore or preserve whitespace.",
     "ui.102": "Enter text: type the text you want to encrypt.",
     "ui.103": "Live encryption: input is converted to glyphs immediately.",
@@ -321,7 +321,89 @@ const i18n = (() => {
     "help.frequency": "Using frequency analysis",
   };
 
+  Object.assign(ja, {
+    'help.extensions': 'キーワード・推定・解読演習',
+    'help.keyword': 'キーワードの重複を除き、残りの英字をA〜Z順で続けて基の表に配置します。3タブで同期します。',
+    'help.rank': '形だけの43キーとサンプルから記号を入力できます。読めない数、英語頻度のlog10平均の順で表を比較します。短い列では推定が外れることがあります。',
+    'help.exercise': '出典を選び、新しい問題で出題します。頻度表で文字を当て、ヒント・答えを見る・クリアを使えます。',
+    'help.exerciseDetail': 'ヒントは正しくない記号のうち最多のものを埋めます。答えの表示と自力での正解は区別します。新問では当て方を消します。乱数が利用できなければ出題しません。',
+    'warn.ignoredOne': '英字以外の{count}文字は無視しました',
+    'keyword.option': 'キーワード', 'keyword.label': 'キーワード（最大40文字）', 'keyword.base': '基にする換字表',
+    'keyword.note': '換字表{base}の置き場所に、{alphabet}の順に文字を入れたキーワード表です。',
+    'shape.T': '上', 'shape.R': '右', 'shape.B': '下', 'shape.L': '左',
+    'shape.join': 'と', 'shape.walls': '{parts}に壁', 'shape.all': '四方に壁',
+    'shape.dots': '・点{count}つ', 'shape.dot': '・点{count}つ',
+    'shape.xT': 'X字の上の区画（V の字）', 'shape.xL': 'X字の左の区画',
+    'shape.xR': 'X字の右の区画', 'shape.xB': 'X字の下の区画'
+  });
+  Object.assign(en, {
+    'help.extensions': 'Keywords, ranking and exercises',
+    'help.keyword': 'Deduplicate the keyword, append unused A–Z letters, and place them in the base mapping. Three tabs stay synchronized.',
+    'help.rank': 'Use 43 shape-only keys or samples. Compare fewer unknowns, then higher mean log10 English frequency. ' +
+      'Short sequences can rank incorrectly.',
+    'help.exercise': 'Choose a source and New problem. Guess letters in the frequency table, or use Hint, Show answer and Clear.',
+    'help.exerciseDetail': 'Hint fills the most frequent incorrect symbol. Revealing and solving are distinct. ' +
+      'New problems clear guesses. Randomness is required.',
+    'warn.ignoredOne': 'Ignored {count} non-letter character',
+    'keyword.option': 'Keyword', 'keyword.label': 'Keyword (up to 40 characters)', 'keyword.base': 'Base mapping',
+    'keyword.note': 'Keyword mapping based on mapping {base}: place the letters in this order: {alphabet}.',
+    'shape.T': 'top', 'shape.R': 'right', 'shape.B': 'bottom', 'shape.L': 'left',
+    'shape.join': ' and ', 'shape.walls': 'walls on the {parts}', 'shape.all': 'walls on all four sides',
+    'shape.dots': ', {count} dots', 'shape.dot': ', {count} dot',
+    'shape.xT': 'top section of the X (V shape)', 'shape.xL': 'left section of the X',
+    'shape.xR': 'right section of the X', 'shape.xB': 'bottom section of the X'
+  });
+
+  function describeShape(shape, locale = language) {
+    const core = typeof PigpenCore !== 'undefined' ? PigpenCore : require('./pigpen-core.js');
+    const s = core.parseShape(shape);
+    if (!s) return '';
+    const dict = locale === 'en' ? en : ja;
+    const parts = [...'TRBL'].filter(p => s.part.includes(p)).map(p => dict['shape.' + p]).join(dict['shape.join']);
+    const description = s.kind === 'x' ? dict['shape.x' + s.part]
+      : s.part.length === 4 ? dict['shape.all'] : dict['shape.walls'].replace('{parts}', parts);
+    return description + (s.dots ? dict[s.dots === 1 ? 'shape.dot' : 'shape.dots'].replace('{count}', s.dots) : '');
+  }
+
   let language = 'ja';
+  Object.assign(ja, {
+    'exercise.tab': '🧩 解読演習', 'exercise.heading': '解読演習', 'exercise.source': '出典',
+    'exercise.new': '新しい問題', 'exercise.hint': 'ヒント', 'exercise.answer': '答えを見る', 'exercise.clear': 'クリア',
+    'exercise.frequency': '英語の文字頻度（上位12文字）', 'exercise.symbol': '記号', 'exercise.count': '回数',
+    'exercise.percent': '割合', 'exercise.guess': '当てる文字',
+    'exercise.instructions': '記号ごとの出現回数を参考に、文字を当ててください。',
+    'exercise.unavailable': '乱数を作る機能が利用できないため、出題できません。',
+    'exercise.conflicts': '同じ文字を2つ以上の記号に当てています: {letters}',
+    'exercise.solved': '解けました: {source}', 'exercise.revealed': '答えを表示しました: {source}'
+  });
+  Object.assign(en, {
+    'exercise.tab': '🧩 Exercises', 'exercise.heading': 'Cryptanalysis Exercises', 'exercise.source': 'Source',
+    'exercise.new': 'New problem', 'exercise.hint': 'Hint', 'exercise.answer': 'Show answer', 'exercise.clear': 'Clear',
+    'exercise.frequency': 'English letter frequency (top 12)', 'exercise.symbol': 'Symbol', 'exercise.count': 'Count',
+    'exercise.percent': 'Percentage', 'exercise.guess': 'Guess',
+    'exercise.instructions': 'Use symbol frequencies to guess the letters.',
+    'exercise.unavailable': 'Random number generation is unavailable, so no problem can be created.',
+    'exercise.conflicts': 'The same letter is assigned to multiple symbols: {letters}',
+    'exercise.solved': 'Solved: {source}', 'exercise.revealed': 'Answer shown: {source}'
+  });
+  Object.assign(ja, {
+    'rank.letters': '文字つき（いまの換字表）', 'rank.shapes': '形だけ（全43種）',
+    'rank.sample1': 'サンプル①', 'rank.sample2': 'サンプル②', 'rank.sample3': 'サンプル③',
+    'rank.heading': 'どの換字表で読めるか', 'rank.empty': '記号を入力すると候補を表示します。',
+    'rank.note': '英語らしさは文字頻度だけの目安です。短い列では外れることがあります。読めない記号（?）が少ない表を先に並べます。',
+    'rank.mapping': '換字表{variant}', 'rank.best': 'いちばん英語らしい: {name}', 'rank.badge': 'いちばん英語らしい',
+    'rank.position': '順位', 'rank.mappingHeader': '換字表', 'rank.reading': '読み', 'rank.unknown': '読めない記号',
+    'rank.score': '英語らしさ', 'rank.action': '操作', 'rank.use': 'この表で読む'
+  });
+  Object.assign(en, {
+    'rank.letters': 'Labeled keys (current mapping)', 'rank.shapes': 'Shapes only (all 43)',
+    'rank.sample1': 'Sample 1', 'rank.sample2': 'Sample 2', 'rank.sample3': 'Sample 3',
+    'rank.heading': 'Which mapping can read this?', 'rank.empty': 'Enter symbols to see candidate mappings.',
+    'rank.note': 'English likeness uses only letter frequency and can be wrong for short sequences. Fewer unknown symbols (?) rank first.',
+    'rank.mapping': 'Mapping {variant}', 'rank.best': 'Most English-like: {name}', 'rank.badge': 'Most English-like',
+    'rank.position': 'Rank', 'rank.mappingHeader': 'Mapping', 'rank.reading': 'Reading', 'rank.unknown': 'Unknown symbols',
+    'rank.score': 'English likeness', 'rank.action': 'Action', 'rank.use': 'Read with this mapping'
+  });
 
   function t(key, values = {}) {
     const message = (language === 'en' ? en : ja)[key];
@@ -366,7 +448,7 @@ const i18n = (() => {
     apply();
   }
 
-  return { ja, en, t, init, apply, setLanguage, get language() { return language; } };
+  return { ja, en, t, init, apply, setLanguage, describeShape, get language() { return language; } };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = i18n;

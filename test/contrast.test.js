@@ -14,7 +14,7 @@ function luminance(hex) {
 for (const [fg, bg] of [
   ['primary-text', 'primary-bg'], ['primary-text', 'hover-bg'], ['tab-text', 'tab-bg'],
   ['muted-text', 'muted-bg'], ['primary-text', 'toast-bg'], ['primary-text', 'error-bg'],
-  ['letter-text', 'surface'], ['letter-text', 'page-bg']
+  ['letter-text', 'surface'], ['letter-text', 'page-bg'], ['glyph-ink', 'surface'], ['glyph-ink', 'page-bg']
 ]) {
   test(`contrast ${fg} on ${bg} >= 4.5`, () => {
     const a = luminance(vars[fg]);
