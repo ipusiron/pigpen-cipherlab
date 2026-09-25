@@ -19,3 +19,11 @@ test('readable source line-count floors', () => {
     assert.ok(fs.readFileSync(path.join(root, file), 'utf8').split(/\r?\n/).length >= floor, file);
   }
 });
+
+test('UI files remain within their column limits', () => {
+  for (const [name, limit] of [['script.js', 160], ['style.css', 160], ['index.html', 250]]) {
+    fs.readFileSync(path.join(root, name), 'utf8').split(/\r?\n/).forEach((line, i) => {
+      assert.ok(line.length <= limit, `${name}:${i + 1} = ${line.length}`);
+    });
+  }
+});

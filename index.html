@@ -2,26 +2,30 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pigpen CipherLab</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <noscript>このツールを使うにはJavaScriptを有効にしてください。</noscript>
   <header>
     <h1>Pigpen CipherLab</h1>
     <p>ピッグペン暗号を可視化した学習ツール</p>
-    <button id="helpButton" class="help-button" title="ヘルプ">❓</button>
+    <button type="button" id="helpButton" class="help-button" title="ヘルプ" aria-label="ヘルプ">❓</button>
   </header>
 
-  <nav class="tabs">
-    <button class="tab-button active" data-tab="encrypt">🔐 暗号化</button>
-    <button class="tab-button" data-tab="decrypt">🔓 復号</button>
-    <button class="tab-button" data-tab="learn">📘 座学</button>
+  <nav class="tabs" role="tablist" aria-label="機能">
+    <button type="button" class="tab-button active" data-tab="encrypt" id="tab-encrypt" role="tab" aria-controls="encrypt" aria-selected="true" tabindex="0">🔐 暗号化</button>
+    <button type="button" class="tab-button" data-tab="decrypt" id="tab-decrypt" role="tab" aria-controls="decrypt" aria-selected="false" tabindex="-1">🔓 復号</button>
+    <button type="button" class="tab-button" data-tab="learn" id="tab-learn" role="tab" aria-controls="learn" aria-selected="false" tabindex="-1">📘 座学</button>
   </nav>
 
   <main>
     <!-- 暗号化タブ -->
-    <section id="encrypt" class="tab-content active">
+    <section role="tabpanel" aria-labelledby="tab-encrypt" id="encrypt" class="tab-content active">
       <h2>暗号化</h2>
       
       <div class="controls-row">
@@ -37,10 +41,10 @@
         <div class="space-toggle">
           <label>空白処理：</label>
           <div class="toggle-switch">
-            <button id="ignoreSpaceBtn" class="toggle-option active" data-mode="ignore">
+            <button type="button" id="ignoreSpaceBtn" class="toggle-option active" data-mode="ignore">
               無視
             </button>
-            <button id="preserveSpaceBtn" class="toggle-option" data-mode="preserve">
+            <button type="button" id="preserveSpaceBtn" class="toggle-option" data-mode="preserve">
               保持
             </button>
           </div>
@@ -50,8 +54,9 @@
         </div>
       </div>
       
+      <label for="plaintext">入力するテキスト</label>
       <textarea id="plaintext" rows="4" placeholder="英字を入力してください（例: HELLO WORLD）"></textarea>
-      <div id="warningMessage" class="warning-message"></div>
+      <div id="warningMessage" aria-live="polite" class="warning-message"></div>
       
       <h3>換字表（アルファベットとグリフの対応表）</h3>
       <div id="alphabetReference" class="alphabet-reference"></div>
@@ -61,7 +66,7 @@
     </section>
 
     <!-- 復号タブ -->
-    <section id="decrypt" class="tab-content">
+    <section role="tabpanel" aria-labelledby="tab-decrypt" id="decrypt" class="tab-content">
       <h2>復号</h2>
       
       <div class="glyph-selector">
@@ -75,19 +80,22 @@
       
       <div id="glyphButtons" class="glyph-grid"></div>
       
+      <h3>入力した記号</h3>
+      <div id="decodeSequence" class="decode-sequence" role="img"></div>
       <h3>復号結果</h3>
       <div class="result-container">
-        <div id="decryptedText" class="output-text"></div>
+        <div id="decryptedText" aria-live="polite" class="output-text"></div>
+        <p id="decodeUnknown" hidden></p>
         <div class="result-buttons">
-          <button id="copyButton">コピー</button>
-          <button id="resetButton">リセット</button>
-          <div id="copyToast" class="copy-toast">コピーしました！</div>
+          <button type="button" id="copyButton">コピー</button>
+          <button type="button" id="resetButton">リセット</button>
+          <div id="copyToast" aria-live="polite" class="copy-toast">コピーしました！</div>
         </div>
       </div>
     </section>
 
     <!-- 座学タブ -->
-    <section id="learn" class="tab-content">
+    <section role="tabpanel" aria-labelledby="tab-learn" id="learn" class="tab-content">
       <h2>座学：ピッグペン暗号を学ぼう</h2>
       
       <!-- 学習１：概要 -->
@@ -125,7 +133,8 @@
             </div>
           </div>
           
-          <h4>📖 換字表の詳しい読み方</h4>
+          <p id="mappingNote"></p>
+          <h4>📖 換字表の詳しい読み方（換字表1の場合）</h4>
           
           <div class="reading-guide">
             <h5>1. 基本的な仕組み</h5>
@@ -138,35 +147,35 @@
             <h5>2. 3×3グリッドの読み方（A〜R）</h5>
             <p>各マス目の位置によって、そのマスを囲む「壁」の形が決まります：</p>
             <ul>
-              <li><strong>左上（A）</strong>：右と下に壁 → ┘ の形</li>
-              <li><strong>中央上（B）</strong>：左右と下に壁 → ⊔ の形</li>
-              <li><strong>右上（C）</strong>：左と下に壁 → └ の形</li>
-              <li><strong>左中（D）</strong>：上下と右に壁 → コ の形</li>
-              <li><strong>中央（E）</strong>：四方に壁 → □ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/A.svg" alt=""><strong>左上（A）</strong>：右と下に壁 → ┘ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/B.svg" alt=""><strong>中央上（B）</strong>：左右と下に壁 → ⊔ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/C.svg" alt=""><strong>右上（C）</strong>：左と下に壁 → └ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/D.svg" alt=""><strong>左中（D）</strong>：上下と右に壁 → コ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/E.svg" alt=""><strong>中央（E）</strong>：四方に壁 → □ の形</li>
               <li><strong>右中（F）</strong>：上下と左に壁 → <img class="reading-glyph" src="assets/glyphs/1/F.svg" alt=""> の形</li>
-              <li><strong>左下（G）</strong>：上と右に壁 → ┐ の形</li>
-              <li><strong>中央下（H）</strong>：左右と上に壁 → ⊓ の形</li>
-              <li><strong>右下（I）</strong>：左と上に壁 → ┌ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/G.svg" alt=""><strong>左下（G）</strong>：上と右に壁 → ┐ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/H.svg" alt=""><strong>中央下（H）</strong>：左右と上に壁 → ⊓ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/I.svg" alt=""><strong>右下（I）</strong>：左と上に壁 → ┌ の形</li>
             </ul>
             <p><strong>J〜R</strong>は、A〜Iと同じ形に<strong>ドット（・）を追加</strong>したものです。</p>
             
             <h5>3. X字グリッドの読み方（S〜Z）</h5>
             <p>X字の4つの区画と、その延長線上の位置を使用します：</p>
             <ul>
-              <li><strong>左上区画（S）</strong>：∨ の形</li>
-              <li><strong>右上区画（T）</strong>：＞ の形</li>
-              <li><strong>左下区画（U）</strong>：＜ の形</li>
-              <li><strong>右下区画（V）</strong>：∧ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/S.svg" alt=""><strong>上の区画（S）</strong>：Vの字の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/T.svg" alt=""><strong>左の区画（T）</strong>：＞ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/U.svg" alt=""><strong>右の区画（U）</strong>：＜ の形</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/V.svg" alt=""><strong>下の区画（V）</strong>：∧ の形</li>
             </ul>
             <p><strong>W〜Z</strong>は、S〜Vと同じ形に<strong>ドット（・）を追加</strong>したものです。</p>
             
             <h5>4. 実際の使用例</h5>
             <p>たとえば「HELLO」を暗号化すると：</p>
             <ul>
-              <li><strong>H</strong> → ⊓（中央下のグリッド形状）</li>
-              <li><strong>E</strong> → □（中央のグリッド形状）</li>
-              <li><strong>L</strong> → └・（右上のグリッド形状＋ドット）</li>
-              <li><strong>L</strong> → └・（同上）</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/H.svg" alt=""><strong>H</strong> → ⊓（中央下のグリッド形状）</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/E.svg" alt=""><strong>E</strong> → □（中央のグリッド形状）</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/L.svg" alt=""><strong>L</strong> → └・（右上のグリッド形状＋ドット）</li>
+              <li><img class="reading-glyph" src="assets/glyphs/1/L.svg" alt=""><strong>L</strong> → └・（同上）</li>
               <li><strong>O</strong> → <img class="reading-glyph" src="assets/glyphs/1/O.svg" alt="">（右中のグリッド形状＋ドット）</li>
             </ul>
           </div>
@@ -241,16 +250,16 @@
 
   <footer>
     <div class="footer">
-      🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/pigpen-cipherlab" target="_blank">ipusiron/pigpen-cipherlab</a> ）
+      🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/pigpen-cipherlab" target="_blank" rel="noopener noreferrer">ipusiron/pigpen-cipherlab</a> ）
     </div>
   </footer>
 
   <!-- ヘルプモーダル -->
-  <div id="helpModal" class="modal">
+  <dialog id="helpModal" class="modal" aria-labelledby="helpTitle">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📖 Pigpen CipherLab ヘルプ</h2>
-        <span class="close-button">&times;</span>
+        <h2 id="helpTitle">📖 Pigpen CipherLab ヘルプ</h2>
+        <button type="button" class="close-button" aria-label="閉じる">&times;</button>
       </div>
       <div class="modal-body">
         <section class="help-section">
@@ -318,7 +327,7 @@
         </section>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <script src="js/pigpen-core.js"></script>
   <script src="js/i18n.js"></script>

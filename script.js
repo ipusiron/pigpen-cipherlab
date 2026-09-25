@@ -44,14 +44,25 @@ preserveSpaceBtn.addEventListener("click", () => {
   updateSpaceMode("preserve");
 });
 
-// タブ切り替え処理
-document.querySelectorAll(".tab-button").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    // アクティブ切替
-    document.querySelectorAll(".tab-button").forEach((b) => b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach((tab) => tab.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.add("active");
+// Tabs use a roving tab stop; changing language does not change the active tab.
+const tabs = [...document.querySelectorAll('.tab-button')];
+function activateTab(button) {
+  tabs.forEach(tab => {
+    const active = tab === button;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.tabIndex = active ? 0 : -1;
+    document.getElementById(tab.dataset.tab).classList.toggle('active', active);
+  });
+}
+tabs.forEach((button, index) => {
+  button.addEventListener('click', () => activateTab(button));
+  button.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    event.preventDefault();
+    const next = tabs[(index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+    activateTab(next);
+    next.focus();
   });
 });
 
@@ -114,15 +125,18 @@ const alphabet = PigpenCore.LETTERS;
 
 // 復号用グリフボタンの生成
 function updateGlyphButtons() {
-glyphButtons.replaceChildren();
+  glyphButtons.replaceChildren();
   
   // A-Zのボタンを生成
   alphabet.split("").forEach((char) => {
-    const glyphItem = document.createElement("div");
+    const glyphItem = document.createElement("button");
+    glyphItem.type = 'button';
+    glyphItem.dataset.letter = char;
+    glyphItem.setAttribute('aria-label', i18n.t('decode.key', { letter: char }));
     glyphItem.className = "cipher-item";
     
     const img = document.createElement("img");
-img.src = glyphPath(state.variant, char);
+    img.src = glyphPath(state.variant, char);
     img.alt = char;
     img.title = char;
     img.className = "cipher-glyph";
@@ -131,8 +145,8 @@ img.src = glyphPath(state.variant, char);
     letterLabel.className = "cipher-letter";
     letterLabel.textContent = char;
 
-    img.addEventListener("click", () => {
-state.decodeItems.push(PigpenCore.shapeOf(char, state.variant));
+    glyphItem.addEventListener("click", () => {
+      state.decodeItems.push(PigpenCore.shapeOf(char, state.variant));
       renderReading();
     });
 
@@ -142,26 +156,31 @@ state.decodeItems.push(PigpenCore.shapeOf(char, state.variant));
   });
   
   // 空白ボタンを追加
-  const spaceButton = document.createElement("div");
+  const spaceButton = document.createElement("button");
+  spaceButton.type = 'button';
+  spaceButton.id = 'decodeSpace';
   spaceButton.className = "space-button";
-spaceButton.title = i18n.t('decode.space');
-spaceButton.textContent = i18n.t('decode.space');
+  spaceButton.title = i18n.t('decode.space');
+  spaceButton.textContent = i18n.t('decode.space');
   
   spaceButton.addEventListener("click", () => {
-state.decodeItems.push(' ');
+    state.decodeItems.push(' ');
     renderReading();
   });
   
   glyphButtons.appendChild(spaceButton);
   
   // DELボタンを追加
-  const delButton = document.createElement("div");
+  const delButton = document.createElement("button");
+  delButton.type = 'button';
+  delButton.id = 'decodeDelete';
   delButton.className = "space-button";
-delButton.title = i18n.t('decode.delete');
+  delButton.title = i18n.t('decode.delete');
+  delButton.setAttribute('aria-label', i18n.t('decode.delete'));
   delButton.textContent = "DEL";
   
   delButton.addEventListener("click", () => {
-state.decodeItems.pop();
+    state.decodeItems.pop();
     renderReading();
   });
   
@@ -207,7 +226,7 @@ resetButton.addEventListener("click", () => {
 const alphabetReference = document.getElementById("alphabetReference");
 
 function updateAlphabetReference() {
-alphabetReference.replaceChildren();
+  alphabetReference.replaceChildren();
   alphabet.split("").forEach((char) => {
     const referenceItem = document.createElement("div");
     referenceItem.className = "reference-item";
@@ -218,7 +237,7 @@ alphabetReference.replaceChildren();
     letterSpan.textContent = char;
     
     const img = document.createElement("img");
-img.src = glyphPath(state.variant, char);
+    img.src = glyphPath(state.variant, char);
     img.alt = char;
     img.className = "reference-glyph";
     
@@ -232,6 +251,26 @@ const keyMappingImage = document.getElementById("keyMappingImage");
 
 function renderReading() {
   decryptedText.textContent = PigpenCore.decodeSequence(state.decodeItems, state.variant);
+  const sequence = document.getElementById('decodeSequence');
+  sequence.replaceChildren();
+  sequence.setAttribute('aria-label', i18n.t('decode.sequence'));
+  for (const shape of state.decodeItems) {
+    if (shape === ' ' || shape === '\n') {
+      const spacer = document.createElement('span');
+      spacer.className = shape === '\n' ? 'cipher-newline' : 'cipher-space';
+      sequence.appendChild(spacer);
+    } else {
+      const source = PigpenCore.glyphSource(shape);
+      const img = document.createElement('img');
+      img.src = glyphPath(source.variant, source.letter);
+      img.alt = '';
+      img.className = 'cipher-glyph';
+      sequence.appendChild(img);
+    }
+  }
+  const unknown = document.getElementById('decodeUnknown');
+  unknown.textContent = i18n.t('decode.unknown');
+  unknown.hidden = !decryptedText.textContent.includes('?');
 }
 
 function render() {
@@ -240,6 +279,8 @@ function render() {
   });
   ignoreSpaceBtn.classList.toggle('active', state.spaceMode === 'ignore');
   preserveSpaceBtn.classList.toggle('active', state.spaceMode === 'preserve');
+  ignoreSpaceBtn.setAttribute('aria-pressed', String(state.spaceMode === 'ignore'));
+  preserveSpaceBtn.setAttribute('aria-pressed', String(state.spaceMode === 'preserve'));
   currentModeText.textContent = i18n.t(`mode.${state.spaceMode}`);
   const result = PigpenCore.tokenize(state.text, state.spaceMode);
   updateAlphabetReference();
@@ -249,6 +290,7 @@ function render() {
   renderReading();
   keyMappingImage.src = `assets/glyphs/${state.variant}/key_mapping.svg`;
   keyMappingImage.alt = i18n.t('mapping.alt', { variant: state.variant });
+  document.getElementById('mappingNote').textContent = i18n.t(`mapping.${state.variant}`);
 }
 
 render();
@@ -260,28 +302,38 @@ const closeButton = document.querySelector(".close-button");
 
 // ヘルプボタンクリックでモーダルを開く
 helpButton.addEventListener("click", () => {
-  helpModal.classList.add("show");
+  helpModal.showModal();
   document.body.classList.add('modal-open');
 });
 
 // 閉じるボタンクリックでモーダルを閉じる
 closeButton.addEventListener("click", () => {
-  helpModal.classList.remove("show");
-  document.body.classList.remove('modal-open');
+  helpModal.close();
 });
 
 // モーダル外側クリックでモーダルを閉じる
 helpModal.addEventListener("click", (e) => {
   if (e.target === helpModal) {
-    helpModal.classList.remove("show");
-    document.body.classList.remove('modal-open');
+    helpModal.close();
   }
 });
 
 // ESCキーでモーダルを閉じる
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && helpModal.classList.contains("show")) {
-    helpModal.classList.remove("show");
-    document.body.classList.remove('modal-open');
+helpModal.addEventListener('close', () => {
+  document.body.classList.remove('modal-open');
+  helpButton.focus();
+});
+
+helpModal.addEventListener('keydown', event => {
+  if (event.key !== 'Tab') return;
+  const items = [...helpModal.querySelectorAll('button, a[href], select, input, textarea, [tabindex="0"]')];
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
   }
 });
