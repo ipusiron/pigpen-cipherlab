@@ -1,9 +1,45 @@
+:root {
+  --primary-text: #ffffff;
+  --primary-bg: #1f6fa8;
+  --hover-bg: #185a88;
+  --tab-text: #2c3e50;
+  --tab-bg: #d5dbdf;
+  --muted-text: #555d64;
+  --muted-bg: #f8f9fa;
+  --toast-bg: #1e7e34;
+  --error-bg: #c62828;
+  --letter-text: #555555;
+  --surface: #ffffff;
+  --page-bg: #f5f7fa;
+  --focus: #8b1800;
+  --link: #155780;
+}
+
 body {
   font-family: "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
   background: #f5f7fa;
   color: #333;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+.cipher-newline {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.reading-glyph {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
 }
 
 header {
@@ -30,7 +66,7 @@ h1 {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   border: none;
-  background-color: #bdc3c7;
+  background-color: var(--tab-bg);
   color: #2c3e50;
   cursor: pointer;
   font-size: 1rem;
@@ -39,7 +75,7 @@ h1 {
 }
 
 .tab-button.active {
-  background-color: #3498db;
+  background-color: var(--primary-bg);
   color: white;
 }
 
@@ -73,7 +109,7 @@ button {
   font-size: 1rem;
   border-radius: 6px;
   border: none;
-  background-color: #3498db;
+  background-color: var(--primary-bg);
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -81,7 +117,7 @@ button {
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: var(--hover-bg);
 }
 
 .glyph-output {
@@ -124,7 +160,7 @@ button:hover {
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--letter-text);
   font-weight: 500;
   transition: all 0.2s ease;
   padding: 4px;
@@ -271,7 +307,7 @@ footer {
 }
 
 .toggle-switch:hover {
-  border-color: #3498db;
+  border-color: var(--primary-bg);
   box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
 }
 
@@ -280,7 +316,7 @@ footer {
   font-size: 0.9rem;
   border: none;
   background-color: transparent;
-  color: #6c757d;
+  color: var(--muted-text);
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
@@ -295,7 +331,7 @@ footer {
 }
 
 .toggle-option.active {
-  background-color: #3498db;
+  background-color: var(--primary-bg);
   color: white;
   font-weight: 600;
 }
@@ -312,7 +348,7 @@ footer {
 
 .mode-indicator {
   font-size: 0.85rem;
-  color: #6c757d;
+  color: var(--muted-text);
   padding: 6px 12px;
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -330,7 +366,6 @@ footer {
 }
 
 .warning-message {
-  display: none;
   margin-top: 0.5rem;
   padding: 0.5rem 1rem;
   background-color: #fff3cd;
@@ -379,7 +414,7 @@ footer {
   left: 50%;
   top: 50px;
   transform: translateX(-50%);
-  background-color: #28a745;
+  background-color: var(--toast-bg);
   color: white;
   padding: 8px 16px;
   border-radius: 6px;
@@ -402,7 +437,7 @@ footer {
   padding: 1.5rem;
   background-color: #f8f9fa;
   border-radius: 12px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid var(--primary-bg);
 }
 
 .learning-section h3 {
@@ -469,7 +504,7 @@ footer {
 }
 
 .tips-highlight h4 {
-  color: #1976d2;
+  color: var(--link);
   margin-top: 0;
 }
 
@@ -527,9 +562,9 @@ footer {
 .help-button {
   position: absolute;
   top: 2rem;
-  right: calc((100vw - 800px) / 2 - 60px);
-  width: 40px;
-  height: 40px;
+  right: max(1rem, calc((100vw - 800px) / 2 - 60px));
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid white;
   background-color: rgba(255, 255, 255, 0.2);
@@ -556,15 +591,17 @@ footer {
 
 /* モーダル */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  width: min(94vw, 700px);
+  max-height: 90vh;
+  background-color: var(--surface);
+  color: #333;
+}
+
+.modal::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.3s ease;
 }
 
 .modal.show {
@@ -573,10 +610,10 @@ footer {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 5% auto;
+  margin: 0;
   padding: 0;
   border: 1px solid #888;
-  width: 80%;
+  width: 100%;
   max-width: 700px;
   max-height: 80vh;
   border-radius: 12px;
@@ -672,5 +709,172 @@ footer {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+/* Interactive layout starts with narrow screens. */
+.tabs {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+button,
+select {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+header button:focus-visible,
+.modal-header button:focus-visible {
+  outline-color: #ffffff;
+}
+
+.tab-button:hover,
+.tab-button:focus-visible {
+  color: var(--primary-text);
+  background-color: var(--hover-bg);
+}
+
+.toggle-option.active:hover {
+  background-color: var(--hover-bg);
+}
+
+.toggle-switch {
+  overflow: visible;
+}
+
+.glyph-grid button.cipher-item {
+  background: var(--surface);
+  padding: 0;
+  margin: 0;
+}
+
+.glyph-grid button.cipher-item:hover,
+.glyph-grid button.cipher-item:focus-visible {
+  background: var(--muted-bg);
+}
+
+.decode-sequence {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  min-height: 72px;
+  padding: 0.5rem;
+}
+
+.decode-sequence img {
+  flex: 0 0 60px;
+  box-sizing: border-box;
+}
+
+.output-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.copy-toast {
+  white-space: normal;
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.copy-toast.error {
+  background-color: var(--error-bg);
+}
+
+textarea::placeholder {
+  color: var(--muted-text);
+  opacity: 1;
+}
+
+footer a {
+  color: var(--link);
+}
+
+header {
+  padding-top: 1.5rem;
+}
+
+.help-button {
+  position: static;
+  margin: 0.5rem auto;
+}
+
+.tab-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.learning-section,
+.reading-guide,
+.tips-highlight {
+  padding: 1rem;
+}
+
+.modal-header {
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.modal-header h2 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.close-button {
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: var(--primary-text);
+}
+
+@media (min-width: 769px) {
+  .help-button {
+    position: absolute;
+    margin: 0;
+  }
+
+  .learning-section,
+  .reading-guide {
+    padding: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+#languageButton {
+  display: block;
+  margin: 0.5rem auto;
+}
+
+@media (min-width: 769px) {
+  #languageButton {
+    position: absolute;
+    right: max(1rem, calc((100vw - 800px) / 2 - 60px));
+    top: 5.25rem;
+    margin: 0;
   }
 }

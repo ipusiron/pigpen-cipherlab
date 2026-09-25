@@ -1,0 +1,5 @@
+{
+  "name": "pigpen-cipherlab",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}
