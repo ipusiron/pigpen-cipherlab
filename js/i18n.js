@@ -352,6 +352,24 @@ const i18n = (() => {
   }
 
   let language = 'ja';
+  Object.assign(ja, {
+    'rank.letters': '文字つき（いまの換字表）', 'rank.shapes': '形だけ（全43種）',
+    'rank.sample1': 'サンプル①', 'rank.sample2': 'サンプル②', 'rank.sample3': 'サンプル③',
+    'rank.heading': 'どの換字表で読めるか', 'rank.empty': '記号を入力すると候補を表示します。',
+    'rank.note': '英語らしさは文字頻度だけの目安です。短い列では外れることがあります。読めない記号（?）が少ない表を先に並べます。',
+    'rank.mapping': '換字表{variant}', 'rank.best': 'いちばん英語らしい: {name}', 'rank.badge': 'いちばん英語らしい',
+    'rank.position': '順位', 'rank.mappingHeader': '換字表', 'rank.reading': '読み', 'rank.unknown': '読めない記号',
+    'rank.score': '英語らしさ', 'rank.action': '操作', 'rank.use': 'この表で読む'
+  });
+  Object.assign(en, {
+    'rank.letters': 'Labeled keys (current mapping)', 'rank.shapes': 'Shapes only (all 43)',
+    'rank.sample1': 'Sample 1', 'rank.sample2': 'Sample 2', 'rank.sample3': 'Sample 3',
+    'rank.heading': 'Which mapping can read this?', 'rank.empty': 'Enter symbols to see candidate mappings.',
+    'rank.note': 'English likeness uses only letter frequency and can be wrong for short sequences. Fewer unknown symbols (?) rank first.',
+    'rank.mapping': 'Mapping {variant}', 'rank.best': 'Most English-like: {name}', 'rank.badge': 'Most English-like',
+    'rank.position': 'Rank', 'rank.mappingHeader': 'Mapping', 'rank.reading': 'Reading', 'rank.unknown': 'Unknown symbols',
+    'rank.score': 'English likeness', 'rank.action': 'Action', 'rank.use': 'Read with this mapping'
+  });
 
   function t(key, values = {}) {
     const message = (language === 'en' ? en : ja)[key];

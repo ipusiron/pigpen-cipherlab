@@ -2,6 +2,7 @@
 const state = { variant: '1', spaceMode: 'ignore', text: '', decodeItems: [], keyword: '', keywordBase: '1' };
 let currentTable;
 let mappingSignature;
+let keyMode = 'letters';
 const encryptGlyphSelect = document.getElementById("encryptGlyphSelect");
 const decryptGlyphSelect = document.getElementById("decryptGlyphSelect");
 const learningGlyphSelect = document.getElementById("learningGlyphSelect");
@@ -145,14 +146,16 @@ function updateGlyphButtons() {
   glyphButtons.replaceChildren();
   
   // A-Zのボタンを生成
-  alphabet.split("").forEach((char) => {
+  const keys = keyMode === 'shapes' ? PigpenCore.ALL_SHAPES : currentTable;
+  keys.forEach((shape, index) => {
+    const char = keyMode === 'shapes' ? '' : alphabet[index];
     const glyphItem = document.createElement("button");
     glyphItem.type = 'button';
     glyphItem.dataset.letter = char;
-    glyphItem.setAttribute('aria-label', i18n.t('decode.key', { letter: char }));
+    glyphItem.dataset.shape = shape;
+    glyphItem.setAttribute('aria-label', char ? i18n.t('decode.key', { letter: char }) : i18n.describeShape(shape));
     glyphItem.className = "cipher-item";
     
-    const shape = currentTable[alphabet.indexOf(char)];
     const img = createGlyph(shape, { className: 'cipher-glyph' });
 
     const letterLabel = document.createElement("span");
@@ -165,7 +168,7 @@ function updateGlyphButtons() {
     });
 
     glyphItem.appendChild(img);
-    glyphItem.appendChild(letterLabel);
+    if (char) glyphItem.appendChild(letterLabel);
     glyphButtons.appendChild(glyphItem);
   });
   
@@ -281,6 +284,83 @@ function renderReading() {
   const unknown = document.getElementById('decodeUnknown');
   unknown.textContent = i18n.t('decode.unknown');
   unknown.hidden = !decryptedText.textContent.includes('?');
+  renderRanking();
+}
+
+document.getElementById('letterKeys').addEventListener('click', () => setKeyMode('letters'));
+document.getElementById('shapeKeys').addEventListener('click', () => setKeyMode('shapes'));
+function setKeyMode(mode) {
+  keyMode = mode;
+  document.getElementById('letterKeys').setAttribute('aria-pressed', String(mode === 'letters'));
+  document.getElementById('shapeKeys').setAttribute('aria-pressed', String(mode === 'shapes'));
+  updateGlyphButtons();
+}
+
+document.querySelectorAll('[data-sample]').forEach(button => button.addEventListener('click', () => {
+  const index = Number(button.dataset.sample);
+  const texts = ['X MARKS THE SPOT', PigpenCore.EXERCISES[0].text, PigpenCore.EXERCISES[1].text];
+  const tokens = PigpenCore.tokenize(texts[index], 'preserve').tokens;
+  state.decodeItems = PigpenCore.encryptWith(tokens, PigpenCore.VARIANTS[index + 1])
+    .map(token => token.type === 'letter' ? token.shape : ' ');
+  renderReading();
+}));
+
+function mappingName(id) {
+  return id === 'keyword' ? i18n.t('keyword.option') : i18n.t('rank.mapping', { variant: id });
+}
+
+function renderRanking() {
+  const table = document.getElementById('variantRanking');
+  const status = document.getElementById('rankStatus');
+  table.replaceChildren();
+  const hasSymbols = state.decodeItems.some(s => s !== ' ' && s !== '\n');
+  table.hidden = !hasSymbols;
+  if (!hasSymbols) {
+    status.textContent = i18n.t('rank.empty');
+    return;
+  }
+  const candidates = PigpenCore.VARIANT_IDS.map(id => ({ id, table: PigpenCore.VARIANTS[id] }));
+  if (state.keyword) candidates.push({ id: 'keyword', table: PigpenCore.keywordTable(state.keywordBase, state.keyword) });
+  const results = PigpenCore.rankVariants(state.decodeItems, candidates);
+  status.textContent = i18n.t('rank.best', { name: mappingName(results[0].id) });
+  const head = document.createElement('thead');
+  const heading = document.createElement('tr');
+  ['position', 'mappingHeader', 'reading', 'unknown', 'score', 'action'].forEach(key => {
+    const cell = document.createElement('th');
+    cell.scope = 'col';
+    cell.textContent = i18n.t(`rank.${key}`);
+    heading.appendChild(cell);
+  });
+  head.appendChild(heading);
+  const body = document.createElement('tbody');
+  results.forEach((result, index) => {
+    const row = document.createElement('tr');
+    row.dataset.variant = result.id;
+    [index + 1, mappingName(result.id), result.text, result.unknown, result.score ?? '—'].forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = String(value);
+      row.appendChild(cell);
+    });
+    if (!index) {
+      const badge = document.createElement('span');
+      badge.className = 'rank-badge';
+      badge.textContent = i18n.t('rank.badge');
+      row.children[1].appendChild(badge);
+    }
+    const action = document.createElement('td');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = i18n.t('rank.use');
+    button.addEventListener('click', () => {
+      state.variant = result.id;
+      render();
+      document.querySelector('#variantRanking tr[data-variant="' + result.id + '"] button').focus();
+    });
+    action.appendChild(button);
+    row.appendChild(action);
+    body.appendChild(row);
+  });
+  table.append(head, body);
 }
 
 function render() {

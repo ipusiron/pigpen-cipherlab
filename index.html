@@ -96,10 +96,23 @@
       </div>
       
       <div id="glyphButtons" class="glyph-grid"></div>
+      <div class="decode-key-mode">
+        <button type="button" id="letterKeys" aria-pressed="true" data-i18n="rank.letters">文字つき（いまの換字表）</button>
+        <button type="button" id="shapeKeys" aria-pressed="false" data-i18n="rank.shapes">形だけ（全43種）</button>
+      </div>
+      <div class="decode-samples">
+        <button type="button" data-sample="0" data-i18n="rank.sample1">サンプル①</button>
+        <button type="button" data-sample="1" data-i18n="rank.sample2">サンプル②</button>
+        <button type="button" data-sample="2" data-i18n="rank.sample3">サンプル③</button>
+      </div>
       
       <h3 data-i18n="ui.15">入力した記号</h3>
       <div id="decodeSequence" class="decode-sequence" role="img"></div>
       <h3 data-i18n="ui.16">復号結果</h3>
+      <h3 data-i18n="rank.heading">どの換字表で読めるか</h3>
+      <p id="rankStatus" aria-live="polite"></p>
+      <div class="table-scroll"><table id="variantRanking"></table></div>
+      <p data-i18n="rank.note">英語らしさは文字頻度だけの目安です。短い列では外れることがあります。読めない記号（?）が少ない表を先に並べます。</p>
       <div class="result-container">
         <div id="decryptedText" aria-live="polite" class="output-text"></div>
         <p id="decodeUnknown" hidden></p>
