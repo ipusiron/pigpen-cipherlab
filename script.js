@@ -191,6 +191,7 @@ function updateGlyphButtons() {
 
 const copyButton = document.getElementById("copyButton");
 const copyToast = document.getElementById("copyToast");
+let copyMessage = 'copy.success';
 
 copyButton.addEventListener("click", async () => {
   const text = decryptedText.textContent;
@@ -202,7 +203,8 @@ copyButton.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(text);
     
-    copyToast.textContent = i18n.t('copy.success');
+    copyMessage = 'copy.success';
+    copyToast.textContent = i18n.t(copyMessage);
     copyToast.classList.remove('error');
     copyToast.classList.add("show");
     
@@ -212,7 +214,8 @@ copyButton.addEventListener("click", async () => {
     }, 2000);
     
   } catch (err) {
-    copyToast.textContent = i18n.t('copy.failure');
+    copyMessage = 'copy.failure';
+    copyToast.textContent = i18n.t(copyMessage);
     copyToast.classList.add('show', 'error');
   }
 });
@@ -291,9 +294,15 @@ function render() {
   keyMappingImage.src = `assets/glyphs/${state.variant}/key_mapping.svg`;
   keyMappingImage.alt = i18n.t('mapping.alt', { variant: state.variant });
   document.getElementById('mappingNote').textContent = i18n.t(`mapping.${state.variant}`);
+  copyToast.textContent = i18n.t(copyMessage);
 }
 
+i18n.init();
 render();
+document.addEventListener('languagechange', render);
+document.getElementById('languageButton').addEventListener('click', () => {
+  i18n.setLanguage(i18n.language === 'ja' ? 'en' : 'ja');
+});
 
 // ヘルプモーダルの処理
 const helpButton = document.getElementById("helpButton");

@@ -864,3 +864,17 @@ header {
     scroll-behavior: auto !important;
   }
 }
+
+#languageButton {
+  display: block;
+  margin: 0.5rem auto;
+}
+
+@media (min-width: 769px) {
+  #languageButton {
+    position: absolute;
+    right: max(1rem, calc((100vw - 800px) / 2 - 60px));
+    top: 5.25rem;
+    margin: 0;
+  }
+}

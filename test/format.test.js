@@ -14,7 +14,7 @@ test('new scripts and tests stay within 160 columns', () => {
 });
 
 test('readable source line-count floors', () => {
-  const floors = { 'style.css': 600, 'index.html': 250, 'script.js': 250, 'js/pigpen-core.js': 60 };
+  const floors = { 'style.css': 600, 'index.html': 250, 'script.js': 250, 'js/pigpen-core.js': 60, 'js/i18n.js': 200 };
   for (const [file, floor] of Object.entries(floors)) {
     assert.ok(fs.readFileSync(path.join(root, file), 'utf8').split(/\r?\n/).length >= floor, file);
   }

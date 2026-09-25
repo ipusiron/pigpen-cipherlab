@@ -13,7 +13,7 @@ test('strict CSP, referrer and no-script fallback', () => {
   }
   assert.doesNotMatch(csp, /unsafe-inline|unsafe-eval|frame-ancestors/);
   assert.match(html, /name="referrer" content="no-referrer"/);
-  assert.match(html, /<noscript>/);
+  assert.match(html, /<noscript\b[^>]*>/);
 });
 
 test('tabs, dialog, labels and buttons are semantic', () => {
