@@ -5,6 +5,31 @@ const path = require('node:path');
 const i18n = require('../js/i18n.js');
 const root = path.join(__dirname, '..');
 
+test('singular ignored character and unchanged Japanese message', () => {
+  assert.equal(i18n.en['warn.ignoredOne'].replace('{count}', '1'), 'Ignored 1 non-letter character');
+  assert.equal(i18n.en['warn.ignored'].replace('{count}', '2'), 'Ignored 2 non-letter characters');
+  assert.equal(i18n.ja['warn.ignoredOne'], i18n.ja['warn.ignored']);
+});
+
+test('43 model descriptions in both languages', () => {
+  const core = require('../js/pigpen-core.js');
+  assert.equal(core.ALL_SHAPES.length, 43);
+  for (const shape of core.ALL_SHAPES) for (const language of ['ja', 'en']) {
+    assert.ok(i18n.describeShape(shape, language).trim());
+  }
+  assert.equal(i18n.describeShape('g:RB:0', 'ja'), '右と下に壁');
+  assert.equal(i18n.describeShape('g:TRBL:1', 'en'), 'walls on all four sides, 1 dot');
+  assert.equal(i18n.describeShape('x:T:0', 'en'), 'top section of the X (V shape)');
+});
+
+test('footer terminology and all extension dictionaries', () => {
+  assert.equal(i18n.ja.footer, '🔗 GitHubリポジトリー');
+  for (const value of Object.values(i18n.ja)) assert.doesNotMatch(value, /リポジトリ(?!ー)/);
+  for (const prefix of ['keyword.', 'rank.', 'exercise.', 'shape.']) {
+    assert.ok(Object.keys(i18n.ja).some(key => key.startsWith(prefix)));
+  }
+});
+
 test('Japanese and English have the same nonempty keys and placeholders', () => {
   assert.deepEqual(Object.keys(i18n.ja).sort(), Object.keys(i18n.en).sort());
   for (const key of Object.keys(i18n.ja)) {

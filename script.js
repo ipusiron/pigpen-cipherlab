@@ -2,7 +2,7 @@
 const state = { variant: '1', spaceMode: 'ignore', text: '', decodeItems: [], keyword: '', keywordBase: '1' };
 let currentTable;
 let mappingSignature;
-let keyMode = 'letters';
+state.keyMode = 'letters';
 state.exercise = { textId: 'dickens', items: [], answer: '', guess: {}, revealed: false };
 const encryptGlyphSelect = document.getElementById("encryptGlyphSelect");
 const decryptGlyphSelect = document.getElementById("decryptGlyphSelect");
@@ -34,7 +34,8 @@ function updateWarningMessage(result) {
   messages.forEach(message => {
     const line = document.createElement('p');
     line.dataset.message = message.key;
-    line.textContent = i18n.t(message.key, message);
+    const key = message.key === 'warn.ignored' && message.count === 1 ? 'warn.ignoredOne' : message.key;
+    line.textContent = i18n.t(key, message);
     warningMessage.appendChild(line);
   });
   warningMessage.hidden = messages.length === 0;
@@ -147,9 +148,9 @@ function updateGlyphButtons() {
   glyphButtons.replaceChildren();
   
   // A-Zのボタンを生成
-  const keys = keyMode === 'shapes' ? PigpenCore.ALL_SHAPES : currentTable;
+  const keys = state.keyMode === 'shapes' ? PigpenCore.ALL_SHAPES : currentTable;
   keys.forEach((shape, index) => {
-    const char = keyMode === 'shapes' ? '' : alphabet[index];
+    const char = state.keyMode === 'shapes' ? '' : alphabet[index];
     const glyphItem = document.createElement("button");
     glyphItem.type = 'button';
     glyphItem.dataset.letter = char;
@@ -291,7 +292,7 @@ function renderReading() {
 document.getElementById('letterKeys').addEventListener('click', () => setKeyMode('letters'));
 document.getElementById('shapeKeys').addEventListener('click', () => setKeyMode('shapes'));
 function setKeyMode(mode) {
-  keyMode = mode;
+  state.keyMode = mode;
   document.getElementById('letterKeys').setAttribute('aria-pressed', String(mode === 'letters'));
   document.getElementById('shapeKeys').setAttribute('aria-pressed', String(mode === 'shapes'));
   updateGlyphButtons();
