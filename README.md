@@ -270,6 +270,7 @@ GitHub Actionsもpushとpull_requestで同じテストを実行します。
 | ファイル | 検査内容 |
 |---|---|
 | core.test.js | 3表の記号ID、入力正規化、暗号化、読み直し、SVG78枚の線・点 |
+| core2.test.js | 描画座標、キーワード換字表、変種の推定、解読演習の既知解答 |
 | html.test.js | CSP・ARIA・ラベル・禁止するDOM操作 |
 | i18n.test.js | 日英のキーと補間値、日本語リテラルの残り |
 | contrast.test.js | CSS変数の8組が4.5:1以上 |
@@ -307,6 +308,7 @@ pigpen-cipherlab/                 # プロジェクトのルート
 ├── test/                         # 自動テスト（node --test）
 │   ├── contrast.test.js          # 配色のコントラスト比
 │   ├── core.test.js              # 中核の期待値とグリフ78枚の形
+│   ├── core2.test.js             # 拡張中核の期待値と描画座標78件
 │   ├── format.test.js            # 最長行と行数の下限
 │   ├── html.test.js              # CSP・ARIA・禁止する書き方
 │   ├── i18n.test.js              # 日英の辞書のキーと日本語の直書き

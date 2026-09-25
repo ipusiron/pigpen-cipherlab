@@ -226,6 +226,7 @@ GitHub Actions runs the same tests on push and pull_request.
 | File | Coverage |
 |---|---|
 | core.test.js | Three mappings, normalization, encryption, rereading, lines and dots of all 78 SVGs |
+| core2.test.js | Drawing coordinates, keyword tables, variant ranking and exercise known answers |
 | html.test.js | CSP, ARIA, labels and prohibited DOM operations |
 | i18n.test.js | Matching dictionary keys and placeholders; untranslated Japanese literals |
 | contrast.test.js | Eight CSS-variable pairs at or above 4.5:1 |
@@ -263,6 +264,7 @@ pigpen-cipherlab/                 # Project root
 ├── test/                         # Automated tests (node --test)
 │   ├── contrast.test.js          # Color contrast ratios
 │   ├── core.test.js              # Known answers and shapes of all 78 glyphs
+│   ├── core2.test.js             # Extension known answers and 78 drawing geometries
 │   ├── format.test.js            # Maximum line lengths and minimum line counts
 │   ├── html.test.js              # CSP, ARIA and prohibited patterns
 │   ├── i18n.test.js              # Dictionary keys and untranslated Japanese literals

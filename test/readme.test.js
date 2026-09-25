@@ -92,8 +92,8 @@ test('all image references exist, all root PNGs are used, and three screenshots 
   }
 });
 
-test('six test files and corrected terminology', () => {
-  assert.equal(fs.readdirSync(__dirname).filter(n => n.endsWith('.test.js')).length, 6);
+test('seven test files and corrected terminology', () => {
+  assert.equal(fs.readdirSync(__dirname).filter(n => n.endsWith('.test.js')).length, 7);
   for (const name of fs.readdirSync(__dirname).filter(n => n.endsWith('.test.js'))) {
     assert.ok(ja.includes(name), name);
     assert.ok(en.includes(name), name);
