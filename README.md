@@ -8,8 +8,8 @@ title: "Pigpen CipherLab"
 subtitle_ja: "ピッグペン暗号ビジュアル学習ツール"
 subtitle_en: "Visual Learning Tool for Pigpen Cipher"
 
-description_ja: "ピッグペン暗号を「見て・触って・学べる」Webツール。3つのタブ（暗号化・復号・座学）で直感的に理解を深められます。3種類の換字表を同期し、入力の正規化と記号列の読み直しに対応。"
-description_en: "Visual tool to encrypt, decrypt, and learn the Pigpen cipher. Switch 3 synchronized key mappings, normalize input, and reread symbol sequences."
+description_ja: "ピッグペン暗号を「見て・触って・学べる」Webツール。暗号化・復号・座学・解読演習の4タブで、キーワード換字表、変種の推定、頻度分析を体験できます。"
+description_en: "Explore the Pigpen cipher through four tabs: encryption, decryption, learning, and exercises. Compare variants, build keyword mappings, and solve substitutions using frequency analysis."
 
 category_ja:
   - 古典暗号
@@ -49,7 +49,7 @@ hub: true
 
 **Pigpen CipherLab** は、古典的な図形暗号であるピッグペン暗号を「見て・触って・学べる」Webツールです。
 
-3つのタブ（暗号化・復号・座学）により、直感的かつ視覚的に理解を深められます。
+4つのタブ（暗号化・復号・座学・解読演習）により、直感的かつ視覚的に理解を深められます。
 
 ---
 
@@ -63,19 +63,36 @@ hub: true
 
 > !["hello world."の暗号文](assets/screenshot.png)
 >
-> *日本語の暗号化タブ。換字表1で空白を保持し、hello world.を入力。対応表のハイライトと2つの注意書きを表示。*
+> *日本語の暗号化タブ。換字表1で空白を保持し、hello world.を入力。対応表のハイライトと2つの注意書き。1280×1000、46,097バイト。*
 
 ![換字表2で記号列を読み直す](assets/screenshot2.png)
 
-*換字表1で入力したHELLO WORLDの記号列を換字表2で読み直し、HEPPS WSVPDを表示。*
+*換字表1で入力したHELLO WORLDの記号列を換字表2で読み直し、HEPPS WSVPDを表示。1280×1000、52,682バイト。*
+
+![換字表の推定](assets/screenshot3.png)
+
+*形だけのキーでサンプル②を読み込み、換字表2が1位の推定結果。1280×1000、64,775バイト。*
+
+![解読演習の途中](assets/screenshot4.png)
+
+*lincolnの問題でヒントを3回使用。暗号文の下の文字と頻度表。1280×1000、40,872バイト。*
 
 ![英語の座学タブ](assets/en/screenshot.png)
 
-*英語の座学タブ。学習2の換字表1と記号画像つきの読み方。*
+*英語の座学タブ。学習2の換字表1とモデル描画の記号つきの読み方。1280×1000、65,810バイト。*
+
+![英語のキーワード換字表](assets/en/screenshot2.png)
+
+*英語の座学タブ。PIGPEN・基1の図と説明。1280×1000、45,695バイト。*
 
 ---
 
 ## ✨ 機能
+
+- **変種の推定**: 形だけの43キーで記号を入力し、3つの換字表と設定済みのキーワード表を英語らしさで比較
+- **キーワード換字表**: 最大40文字のキーワードと基にする表から文字の並びを作成し、暗号化・復号・座学で同期
+- **解読演習**: 英文5本をランダムな単一換字で出題し、記号の頻度から文字を推測
+- **モデルからの描画**: 記号IDからSVGの線と点を描画。個別の記号画像を読み込まない
 
 ### 📱 タブ機能
 
@@ -84,6 +101,7 @@ hub: true
 | 🔐 暗号化タブ | 英文をピッグペン暗号の図形へ変換（リアルタイム表示・文字ハイライト付き） |
 | 🔓 復号タブ | 記号列を入力し、選んだ換字表で読み直す。コピー機能付き |
 | 📘 座学タブ | 暗号の背景・歴史・構造・解読技術を段階的に学習 |
+| 🧩 解読演習タブ | 記号の頻度を見て文字を当てる。ヒント・答え・クリア・新しい問題 |
 
 ### 🔐 暗号化タブの機能
 
@@ -135,6 +153,14 @@ hub: true
 2. 空白の「保持」を選び、対応表のハイライトと注意書き、暗号文を確認する。
 3. 復号タブで換字表1のキーからHELLO WORLDを入力し、換字表2へ切り替える。同じ記号列の読みがHEPPS WSVPDになる。
 4. 座学タブで各換字表の図と注記を読む。
+5. 換字表で「キーワード」を選び、キーワードと基にする表を設定する。3タブの設定と並びは同期する。
+6. 復号で「形だけ（全43種）」またはサンプルを選ぶ。「どの換字表で読めるか」の一覧で比較し、「この表で読む」で読み直す。
+7. 解読演習で出典を選び「新しい問題」を押す。頻度表のセレクトで文字を当て、必要ならヒントを使う。
+
+ヒントは、正しくない記号のうち出現回数が最も多いものを1つ埋めます。
+同じ文字を複数の記号に当てると案内が出ます。正解すると出典と「解けました」を表示し、答えを見た場合は「答えを表示しました」と区別します。
+「クリア」は当て方を消し、「新しい問題」は当て方を消して新しい換字表で出題します。
+出題には`crypto.getRandomValues`を使い、利用できない場合は案内を表示して出題しません。
 
 入力と同時に変換するため、「暗号化する」ボタンはありません。空白だけの入力もその設定に従って処理します。
 換字表を変えても復号の記号列は保持され、その表にない記号は?で表示します。
@@ -213,7 +239,44 @@ Wikipediaが紹介する方式は点の位置（左・中・右）で区別し�
 
 ---
 
+キーワード表は、キーワードの英字を正規化して重複を除き、残りの英字をA〜Zの順で続けます。
+この並びを基の換字表の置き場所へ順に入れます。空のキーワードは通常の並びです。
+
+| キーワード | 基 | 並び | HELLO の記号 ID |
+|---|---|---|---|
+| PIGPEN | 1 | PIGENABCDFHJKLMOQRSTUVWXYZ | H=g:RBL:1 E=g:TRB:0 L=g:TRBL:1 L=g:TRBL:1 O=g:TR:1 |
+| KRYPTOS | 3 | KRYPTOSABCDEFGHIJLMNQUVWXZ | H=g:TRBL:3 E=g:TRB:3 L=g:TBL:3 L=g:TBL:3 O=g:RBL:3 |
+
+変種の推定は、読めない記号の数が少ない順、読めた文字の英語頻度のlog10平均が高い順に並べます。
+文字頻度だけの目安なので、短い列では外れることがあります。単語の意味を判定するものではありません。
+
+| 記号列 | 1位 | 読み |
+|---|---|---|
+| HELLO WORLD / 1 | 1 | HELLO WORLD |
+| HELLO WORLD / 2 | 2 | HELLO WORLD |
+| HELLO WORLD / 3 | 3 | HELLO WORLD |
+
+全表の記号の和集合は43種です。100×100の枠で線と点を描き、描画データが既存SVG78枚の線・点と一致することをテストで確かめます。
+
+---
+
+## 🧩 解読演習の英文
+
+次の5本は著作権の保護期間が終わった公有の文です。文字数は出題に使う英字の数です。
+本文はREADMEには掲載しません。出題の換字は毎回変わり、入力や当て方は保存・送信しません。
+
+| 出典 | 文字数 |
+|---|---|
+| Charles Dickens, A Tale of Two Cities (1859) | 82 |
+| Herman Melville, Moby-Dick (1851) | 80 |
+| Jane Austen, Pride and Prejudice (1813) | 92 |
+| Declaration of Independence (1776) | 117 |
+| Abraham Lincoln, Gettysburg Address (1863) | 90 |
+
+---
+
 ## 🔤 暗号化の例
+
 
 "X marks the spot"という英文を換字表1で暗号化すると、以下のようになります。
 
@@ -273,9 +336,9 @@ GitHub Actionsもpushとpull_requestで同じテストを実行します。
 | core2.test.js | 描画座標、キーワード換字表、変種の推定、解読演習の既知解答 |
 | html.test.js | CSP・ARIA・ラベル・禁止するDOM操作 |
 | i18n.test.js | 日英のキーと補間値、日本語リテラルの残り |
-| contrast.test.js | CSS変数の8組が4.5:1以上 |
+| contrast.test.js | CSS変数の10組が4.5:1以上 |
 | format.test.js | 最長行と行数の下限 |
-| readme.test.js | 既知解答4行の再計算、日英15節、ツリーと画像、YAML |
+| readme.test.js | 既知解答・キーワード・推定の再計算、出典5本、日英16節、ツリーと画像6枚、YAML |
 
 ---
 
@@ -288,7 +351,8 @@ pigpen-cipherlab/                 # プロジェクトのルート
 │       └── test.yml              # push と pull_request で npm test を実行する
 ├── assets/                       # 画像
 │   ├── en/                       # 英語の画面のスクリーンショット
-│   │   └── screenshot.png        # 英語の座学タブ（換字表1の読み方）
+│   │   ├── screenshot.png        # 英語の座学タブ（換字表1の読み方）
+│   │   └── screenshot2.png       # 英語の座学タブ（PIGPEN・基1）
 │   ├── glyphs/                   # 記号の画像（換字表ごと）
 │   │   ├── 1/                    # 換字表1（Wikipedia の配置）
 │   │   │   ├── A.svg〜Z.svg      # 各文字の記号（26ファイル）
@@ -301,7 +365,9 @@ pigpen-cipherlab/                 # プロジェクトのルート
 │   │       └── key_mapping.svg   # 換字表の図
 │   ├── ciphertext.png            # README の暗号化の例（X marks the spot）
 │   ├── screenshot.png            # 暗号化タブ（hello world.）
-│   └── screenshot2.png           # 復号タブ（同じ記号列を換字表2で読む）
+│   ├── screenshot2.png           # 復号タブ（同じ記号列を換字表2で読む）
+│   ├── screenshot3.png           # 変種の推定（サンプル②）
+│   └── screenshot4.png           # 解読演習（lincoln・ヒント3回）
 ├── js/                           # 画面から分けたスクリプト
 │   ├── i18n.js                   # 日英の辞書と言語の切り替え
 │   └── pigpen-core.js            # 記号のモデル・入力の正規化・暗号化・読み直し（DOM を使わない）
@@ -319,7 +385,7 @@ pigpen-cipherlab/                 # プロジェクトのルート
 ├── LICENSE                       # MIT ライセンス
 ├── README.en.md                  # 英語の説明
 ├── README.md                     # 日本語の説明
-├── index.html                    # 3タブの画面
+├── index.html                    # 4タブの画面
 ├── package.json                  # npm test の設定（依存なし）
 ├── script.js                     # 画面の処理（状態と描画）
 └── style.css                     # スタイル

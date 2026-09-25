@@ -137,8 +137,8 @@ button:hover {
   margin: 1rem 0;
 }
 
-.glyph-grid img,
-.glyph-output img {
+.glyph-grid .model-glyph,
+.glyph-output .model-glyph {
   width: 60px;
   height: 60px;
   cursor: pointer;

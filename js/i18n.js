@@ -117,7 +117,7 @@ const i18n = (() => {
     "ui.97": "覚えておくべきこと：ピッグペン暗号は見た目は複雑ですが、本質的には単純な単一換字式暗号です。グリフをアルファベットに置き換えることができれば、あとは通常の暗号解読手法が使えます。",
     "ui.98": "📖 Pigpen CipherLab ヘルプ",
     "ui.99": "🔐 暗号化タブの使い方",
-    "ui.100": "換字表を選択：使用したいグリフセット（1〜3）を選びます",
+    "ui.100": "換字表を選択：1〜3またはキーワードを選びます",
     "ui.101": "空白処理を設定：空白を無視するか保持するかを選択",
     "ui.102": "テキストを入力：暗号化したい英文を入力欄に記入",
     "ui.103": "リアルタイム暗号化：入力と同時に自動的にグリフに変換されます",
@@ -279,7 +279,7 @@ const i18n = (() => {
       + "assigning letters to glyphs, familiar cryptanalysis methods apply.",
     "ui.98": "📖 Pigpen CipherLab help",
     "ui.99": "🔐 Using the Encrypt tab",
-    "ui.100": "Choose a key mapping: select one of the three glyph sets.",
+    "ui.100": "Choose a key mapping: select 1–3 or Keyword.",
     "ui.101": "Set whitespace handling: choose whether to ignore or preserve whitespace.",
     "ui.102": "Enter text: type the text you want to encrypt.",
     "ui.103": "Live encryption: input is converted to glyphs immediately.",
@@ -322,6 +322,11 @@ const i18n = (() => {
   };
 
   Object.assign(ja, {
+    'help.extensions': 'キーワード・推定・解読演習',
+    'help.keyword': 'キーワードの重複を除き、残りの英字をA〜Z順で続けて基の表に配置します。3タブで同期します。',
+    'help.rank': '形だけの43キーとサンプルから記号を入力できます。読めない数、英語頻度のlog10平均の順で表を比較します。短い列では推定が外れることがあります。',
+    'help.exercise': '出典を選び、新しい問題で出題します。頻度表で文字を当て、ヒント・答えを見る・クリアを使えます。',
+    'help.exerciseDetail': 'ヒントは正しくない記号のうち最多のものを埋めます。答えの表示と自力での正解は区別します。新問では当て方を消します。乱数が利用できなければ出題しません。',
     'warn.ignoredOne': '英字以外の{count}文字は無視しました',
     'keyword.option': 'キーワード', 'keyword.label': 'キーワード（最大40文字）', 'keyword.base': '基にする換字表',
     'keyword.note': '換字表{base}の置き場所に、{alphabet}の順に文字を入れたキーワード表です。',
@@ -332,6 +337,13 @@ const i18n = (() => {
     'shape.xR': 'X字の右の区画', 'shape.xB': 'X字の下の区画'
   });
   Object.assign(en, {
+    'help.extensions': 'Keywords, ranking and exercises',
+    'help.keyword': 'Deduplicate the keyword, append unused A–Z letters, and place them in the base mapping. Three tabs stay synchronized.',
+    'help.rank': 'Use 43 shape-only keys or samples. Compare fewer unknowns, then higher mean log10 English frequency. ' +
+      'Short sequences can rank incorrectly.',
+    'help.exercise': 'Choose a source and New problem. Guess letters in the frequency table, or use Hint, Show answer and Clear.',
+    'help.exerciseDetail': 'Hint fills the most frequent incorrect symbol. Revealing and solving are distinct. ' +
+      'New problems clear guesses. Randomness is required.',
     'warn.ignoredOne': 'Ignored {count} non-letter character',
     'keyword.option': 'Keyword', 'keyword.label': 'Keyword (up to 40 characters)', 'keyword.base': 'Base mapping',
     'keyword.note': 'Keyword mapping based on mapping {base}: place the letters in this order: {alphabet}.',

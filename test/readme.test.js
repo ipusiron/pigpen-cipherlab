@@ -62,12 +62,12 @@ test('both trees list every non-ignored project file with descriptions', () => {
   assert.deepEqual(treeFiles(en), files);
 });
 
-test('matching fifteen sections in their specified order', () => {
+test('matching sixteen sections in their specified order', () => {
   const japanese = ['🌐 デモページ', '📸 スクリーンショット', '✨ 機能', '📖 使い方', '🧠 ピッグペン暗号とは？',
-    '🔬 仕様と既知解答', '🔤 暗号化の例', '🔍 ピッグペン暗号文の解読アプローチ', '📚 参考リソース',
+    '🔬 仕様と既知解答', '🧩 解読演習の英文', '🔤 暗号化の例', '🔍 ピッグペン暗号文の解読アプローチ', '📚 参考リソース',
     '🔒 このツールのセキュリティ', '🧪 テスト', '📁 ディレクトリー構造', '💻 動作環境', '📄 ライセンス', '🛠️ このツールについて'];
   const english = ['🌐 Demo', '📸 Screenshots', '✨ Features', '📖 Usage', '🧠 What Is the Pigpen Cipher?',
-    '🔬 Specification and Known Answers', '🔤 Encryption Example', '🔍 How to Break a Pigpen Ciphertext', '📚 References',
+    '🔬 Specification and Known Answers', '🧩 Exercise Texts', '🔤 Encryption Example', '🔍 How to Break a Pigpen Ciphertext', '📚 References',
     '🔒 Security of This Tool', '🧪 Tests', '📁 Directory Structure', '💻 Requirements', '📄 License', '🛠️ About This Tool'];
   assert.deepEqual([...ja.matchAll(/^## (.+)\r?$/gm)].map(m => m[1].trim()), japanese);
   assert.deepEqual([...en.matchAll(/^## (.+)\r?$/gm)].map(m => m[1].trim()), english);
@@ -75,20 +75,50 @@ test('matching fifteen sections in their specified order', () => {
   assert.ok(en.includes('[日本語](README.md)'));
 });
 
-test('all image references exist, all root PNGs are used, and three screenshots meet limits', () => {
+test('all image references exist, all PNGs are used, and six screenshots meet limits', () => {
   for (const doc of [ja, en]) {
     const images = [...doc.matchAll(/!\[[^\]]*\]\((assets\/[^)]+)\)/g)].map(m => m[1]);
-    assert.equal(images.length, 4);
+    assert.equal(images.length, 7);
     for (const file of images) assert.ok(fs.existsSync(path.join(root, file)), file);
     for (const name of fs.readdirSync(path.join(root, 'assets')).filter(n => n.endsWith('.png'))) {
       assert.ok(images.includes('assets/' + name), name);
     }
+    for (const name of fs.readdirSync(path.join(root, 'assets/en')).filter(n => n.endsWith('.png'))) {
+      assert.ok(images.includes('assets/en/' + name), name);
+    }
   }
-  for (const file of ['assets/screenshot.png', 'assets/screenshot2.png', 'assets/en/screenshot.png']) {
+  for (const file of ['assets/screenshot.png', 'assets/screenshot2.png', 'assets/en/screenshot.png',
+    'assets/screenshot3.png', 'assets/screenshot4.png', 'assets/en/screenshot2.png']) {
     const png = fs.readFileSync(path.join(root, file));
     assert.equal(png.readUInt32BE(16), 1280);
     assert.ok([1000, 1200].includes(png.readUInt32BE(20)));
     assert.ok(png.length <= 300 * 1024);
+  }
+});
+
+test('keyword and ranking examples recompute, and five exercise sources match', () => {
+  for (const doc of [ja, en]) {
+    const keyed = [...doc.matchAll(/^\| (PIGPEN|KRYPTOS) \| ([13]) \| ([A-Z]+) \| ([^|]+) \|$/gm)];
+    assert.equal(keyed.length, 2);
+    for (const [, keyword, base, alphabet, expected] of keyed) {
+      assert.equal(core.keyedAlphabet(keyword), alphabet);
+      const tokens = core.tokenize('HELLO', 'ignore').tokens;
+      const actual = core.encryptWith(tokens, core.keywordTable(base, keyword)).map(t => t.letter + '=' + t.shape).join(' ');
+      assert.equal(actual, expected);
+    }
+    const ranked = [...doc.matchAll(/^\| HELLO WORLD \/ ([123]) \| ([123]) \| ([^|]+) \|$/gm)];
+    assert.equal(ranked.length, 3);
+    for (const [, from, top, text] of ranked) {
+      const tokens = core.tokenize('HELLO WORLD', 'preserve').tokens;
+      const items = core.encryptWith(tokens, core.VARIANTS[from]).map(t => t.type === 'letter' ? t.shape : ' ');
+      const result = core.rankVariants(items, core.VARIANT_IDS.map(id => ({ id, table: core.VARIANTS[id] })))[0];
+      assert.equal(result.id, top);
+      assert.equal(result.text, text);
+    }
+    const sources = [...doc.matchAll(/^\| ([^|]+\(\d{4}\)) \| (\d+) \|$/gm)];
+    assert.equal(sources.length, 5);
+    assert.deepEqual(sources.map(([, source, count]) => [source, Number(count)]),
+      core.EXERCISES.map(e => [e.source, core.tokenize(e.text, 'ignore').tokens.length]));
   }
 });
 

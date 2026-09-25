@@ -9,7 +9,7 @@ Pigpen CipherLab is a visual learning tool for the Pigpen cipher (ピッグペ�
 ## Architecture
 
 This is a static web application with no build process or dependencies. Classic scripts allow both HTTP and file:// use:
-- `index.html` - Main HTML file with three tabs and help modal
+- `index.html` - Main HTML file with four tabs and help modal
 - `script.js` - JavaScript handling tab switching, cipher operations, and UI state
 - `js/pigpen-core.js` - Pure model and cipher operations; also exported through conditional CommonJS
 - `js/i18n.js` - Japanese/English dictionaries and language selection
@@ -18,18 +18,37 @@ This is a static web application with no build process or dependencies. Classic 
 
 ## Key Implementation Details
 
-**Tab System**: Three tabs with synchronized glyph set selection across tabs:
+**Tab System**: Four tabs; Encrypt, Decrypt and Learn share one mapping:
 - Encryption tab: Real-time text-to-glyph conversion with character highlighting
 - Decryption tab: Click glyphs to build decoded text
 - Learning tab: Educational content with interactive key mapping display
+- Exercise tab: Five public-domain excerpts with a random substitution and frequency-based guesses
 
-**Cipher State** (in `script.js`): one object with `variant`, `spaceMode`, `text` and `decodeItems`.
+**Cipher State** (in `script.js`): one object with `variant`, `spaceMode`, `text`, `decodeItems`,
+`keyword`, `keywordBase`, `keyMode` and `exercise`.
 All three key selectors share one change handler. `render()` derives the selectors, reference, ciphertext,
 warnings, decoding keys and reading, and learning diagram from that state. Do not add independent per-tab mapping state.
 Decoding stores shape IDs, not letters. Switching a mapping rereads those same symbols and uses `?` for missing shapes.
 
-**Glyph File Structure**: per-letter paths must be validated through the core. Encryption uses core tokens;
-the entered decoding sequence uses `glyphSource`. Existing SVG elements must not be redrawn or changed.
+**Glyph Rendering**: draw every symbol from its shape ID with core.geometry and createElementNS.
+Use a 100×100 view box, CSS stroke width 3 and dot radius 4. Never construct individual glyph file paths.
+Keep all 78 original SVGs unchanged as coordinate test fixtures. Only standard key_mapping.svg diagrams remain images.
+Cache decoding keys and learning diagrams by mapping, keyword, base and language; typing plaintext must not rebuild them.
+
+**Keyword Mappings**: state.keyword (default empty, maximum 40 characters), state.keywordBase (default 1),
+and variant='keyword' define tableOf. The deduplicated normalized keyword precedes unused A–Z letters.
+The three controls synchronize. Use keyLayout to draw keyword diagrams; ordinary mappings keep their existing diagrams.
+
+**Ranking**: state.keyMode selects labeled or all 43 shape-only keys. rankVariants compares fewer unknown symbols,
+then higher average log10 English frequency, then original candidate order. Include a keyword candidate only when configured.
+This is a letter-frequency heuristic and can fail on short sequences. Sample sources are set 1 X MARKS THE SPOT,
+set 2 dickens and set 3 melville.
+
+**Exercises**: state.exercise holds textId, items, answer, guess and revealed. Generate randoms only with
+crypto.getRandomValues(new Uint32Array(26)); explain unavailable crypto without creating a problem.
+Use shapeCounts, applyGuess, guessConflicts, hint and isSolved for rendering. New problems discard guesses.
+Preserve the five EXERCISES and sources: letter counts 82, 80, 92, 117, 90; distinct letters 16, 19, 22, 21, 19.
+Distinguish solving from revealing the answer. Do not save or transmit exercise state.
 
 **Symbol Model**: `g:<walls>:<dots>` uses walls ordered T, R, B, L. `x:<region>:<dots>` uses top T,
 left L, right R, bottom B. Sets 1 and 2 share the same 26 symbols; set 3 shares nine symbols with set 1.
@@ -59,13 +78,14 @@ Run `npm test` with Node.js 22 (node --test). GitHub Actions runs the same comma
 | Test file | Purpose |
 |---|---|
 | core.test.js | Known answers for all mappings, normalization, encryption, rereading and 78 SVG shapes |
+| core2.test.js | Drawing geometry, 13 invalid IDs, 43 shapes, keyword tables, 26 rankings and exercises |
 | html.test.js | CSP, accessibility markup and prohibited rendering patterns |
 | i18n.test.js | Matching dictionary keys/placeholders and no Japanese literals in UI/core code |
-| contrast.test.js | Eight CSS-variable pairs must reach 4.5:1 |
+| contrast.test.js | Ten CSS-variable pairs must reach 4.5:1 |
 | format.test.js | JS/CSS/test lines <=160; HTML <=250; readable source line-count floors |
-| readme.test.js | Recompute four known-answer rows, compare 15 sections, trees, image references and YAML |
+| readme.test.js | Recompute known-answer and extension tables, compare 16 sections, trees, six screenshots and YAML |
 
-Minimum line counts: style.css 600, index.html 250, script.js 250, pigpen-core.js 60, i18n.js 200.
+Minimum line counts: style.css 600, index.html 250, script.js 250, pigpen-core.js 180, i18n.js 200.
 The i18n.js minimum was enabled only after the stage-4 full dictionary migration, as explicitly approved.
 Keep tests and known answers intact; extend counts only for specified additions.
 
