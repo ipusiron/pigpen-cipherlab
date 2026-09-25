@@ -52,7 +52,6 @@
       
       <textarea id="plaintext" rows="4" placeholder="英字を入力してください（例: HELLO WORLD）"></textarea>
       <div id="warningMessage" class="warning-message"></div>
-      <button id="encryptButton">暗号化する</button>
       
       <h3>換字表（アルファベットとグリフの対応表）</h3>
       <div id="alphabetReference" class="alphabet-reference"></div>
@@ -144,7 +143,7 @@
               <li><strong>右上（C）</strong>：左と下に壁 → └ の形</li>
               <li><strong>左中（D）</strong>：上下と右に壁 → コ の形</li>
               <li><strong>中央（E）</strong>：四方に壁 → □ の形</li>
-              <li><strong>右中（F）</strong>：上下と左に壁 → <span style="display:inline-block; transform: rotate(180deg);">コ</span> の形</li>
+              <li><strong>右中（F）</strong>：上下と左に壁 → <img class="reading-glyph" src="assets/glyphs/1/F.svg" alt=""> の形</li>
               <li><strong>左下（G）</strong>：上と右に壁 → ┐ の形</li>
               <li><strong>中央下（H）</strong>：左右と上に壁 → ⊓ の形</li>
               <li><strong>右下（I）</strong>：左と上に壁 → ┌ の形</li>
@@ -168,7 +167,7 @@
               <li><strong>E</strong> → □（中央のグリッド形状）</li>
               <li><strong>L</strong> → └・（右上のグリッド形状＋ドット）</li>
               <li><strong>L</strong> → └・（同上）</li>
-              <li><strong>O</strong> → <span style="display:inline-block; transform: rotate(180deg);">コ</span>・（右中のグリッド形状＋ドット）</li>
+              <li><strong>O</strong> → <img class="reading-glyph" src="assets/glyphs/1/O.svg" alt="">（右中のグリッド形状＋ドット）</li>
             </ul>
           </div>
           
@@ -322,6 +321,7 @@
   </div>
 
   <script src="js/pigpen-core.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
