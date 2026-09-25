@@ -936,6 +936,65 @@ header {
   font-size: 0.875rem;
 }
 
+.exercise-cipher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.exercise-word {
+  display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.exercise-symbol {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+}
+
+.exercise-symbol svg {
+  width: 28px;
+  height: 28px;
+}
+
+.exercise-analysis {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.exercise-analysis td svg {
+  width: 44px;
+  height: 44px;
+}
+
+.exercise-analysis dl {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.guess-conflict select {
+  outline: 3px solid var(--error-bg);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+@media (min-width: 769px) {
+  .exercise-analysis {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
 .key-diagram {
   width: 180px;
   max-width: 100%;

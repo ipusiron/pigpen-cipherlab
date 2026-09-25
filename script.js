@@ -3,6 +3,7 @@ const state = { variant: '1', spaceMode: 'ignore', text: '', decodeItems: [], ke
 let currentTable;
 let mappingSignature;
 let keyMode = 'letters';
+state.exercise = { textId: 'dickens', items: [], answer: '', guess: {}, revealed: false };
 const encryptGlyphSelect = document.getElementById("encryptGlyphSelect");
 const decryptGlyphSelect = document.getElementById("decryptGlyphSelect");
 const learningGlyphSelect = document.getElementById("learningGlyphSelect");
@@ -389,6 +390,7 @@ function render() {
   updateWarningMessage(result);
   renderReading();
   copyToast.textContent = i18n.t(copyMessage);
+  renderExercise();
 }
 
 function renderKeywordControls() {
@@ -443,7 +445,140 @@ function renderMapping() {
   }
 }
 
+const exerciseText = document.getElementById('exerciseText');
+PigpenCore.EXERCISES.forEach(exercise => {
+  const option = document.createElement('option');
+  option.value = exercise.id;
+  option.textContent = exercise.source;
+  exerciseText.appendChild(option);
+});
+
+function newExercise() {
+  const textId = exerciseText.value;
+  if (!globalThis.crypto || typeof crypto.getRandomValues !== 'function') {
+    state.exercise = { textId, items: [], answer: '', guess: {}, revealed: false };
+  } else {
+    const randoms = crypto.getRandomValues(new Uint32Array(26));
+    const problem = PigpenCore.makeExercise(PigpenCore.EXERCISES.find(e => e.id === textId).text, randoms);
+    state.exercise = { textId, items: problem.items, answer: problem.answer, guess: {}, revealed: false };
+  }
+  renderExercise();
+}
+
+document.getElementById('exerciseNew').addEventListener('click', newExercise);
+document.getElementById('exerciseHint').addEventListener('click', () => {
+  const e = state.exercise;
+  const next = PigpenCore.hint(e.items, e.guess, e.answer);
+  if (next) e.guess[next.shape] = next.letter;
+  renderExercise();
+});
+document.getElementById('exerciseAnswer').addEventListener('click', () => {
+  const e = state.exercise;
+  e.items.forEach((shape, i) => { if (shape !== ' ') e.guess[shape] = e.answer[i]; });
+  e.revealed = true;
+  renderExercise();
+});
+document.getElementById('exerciseClear').addEventListener('click', () => {
+  state.exercise.guess = {};
+  state.exercise.revealed = false;
+  renderExercise();
+});
+
+function renderExercise() {
+  const e = state.exercise;
+  const status = document.getElementById('exerciseStatus');
+  const ready = e.items.length > 0;
+  for (const name of ['Hint', 'Answer', 'Clear']) document.getElementById('exercise' + name).disabled = !ready;
+  const solved = ready && PigpenCore.isSolved(e.items, e.guess, e.answer);
+  const source = PigpenCore.EXERCISES.find(text => text.id === e.textId).source;
+  status.textContent = !ready ? i18n.t('exercise.unavailable') : solved
+    ? i18n.t(e.revealed ? 'exercise.revealed' : 'exercise.solved', { source }) : i18n.t('exercise.instructions');
+  const cipher = document.getElementById('exerciseCipher');
+  cipher.replaceChildren();
+  let word = document.createElement('span');
+  word.className = 'exercise-word';
+  cipher.appendChild(word);
+  e.items.forEach(shape => {
+    if (shape === ' ') {
+      word = document.createElement('span');
+      word.className = 'exercise-word';
+      cipher.appendChild(word);
+      return;
+    }
+    const item = document.createElement('span');
+    item.className = 'exercise-symbol';
+    item.dataset.shape = shape;
+    const guess = document.createElement('span');
+    guess.textContent = PigpenCore.applyGuess([shape], e.guess);
+    item.append(createGlyph(shape), guess);
+    word.appendChild(item);
+  });
+  const conflicts = PigpenCore.guessConflicts(e.guess);
+  document.getElementById('exerciseConflicts').textContent = conflicts.length
+    ? i18n.t('exercise.conflicts', { letters: conflicts.join(', ') }) : '';
+  const focused = document.activeElement.dataset.guessShape;
+  const table = document.getElementById('exerciseCounts');
+  table.replaceChildren();
+  const head = document.createElement('thead');
+  const titles = document.createElement('tr');
+  ['symbol', 'count', 'percent', 'guess'].forEach(key => {
+    const cell = document.createElement('th');
+    cell.scope = 'col';
+    cell.textContent = i18n.t(`exercise.${key}`);
+    titles.appendChild(cell);
+  });
+  head.appendChild(titles);
+  const body = document.createElement('tbody');
+  PigpenCore.shapeCounts(e.items).forEach((entry, index) => {
+    const row = document.createElement('tr');
+    row.classList.toggle('guess-conflict', conflicts.includes(e.guess[entry.shape]));
+    const symbol = document.createElement('td');
+    symbol.appendChild(createGlyph(entry.shape));
+    row.appendChild(symbol);
+    for (const value of [entry.count, entry.percent + '%']) {
+      const cell = document.createElement('td');
+      cell.textContent = String(value);
+      row.appendChild(cell);
+    }
+    const cell = document.createElement('td');
+    const label = document.createElement('label');
+    label.htmlFor = 'guess-' + index;
+    label.className = 'visually-hidden';
+    label.textContent = i18n.describeShape(entry.shape);
+    const select = document.createElement('select');
+    select.id = label.htmlFor;
+    select.dataset.guessShape = entry.shape;
+    select.setAttribute('aria-label', label.textContent);
+    for (const letter of ['', ...alphabet]) {
+      const option = document.createElement('option');
+      option.value = letter;
+      option.textContent = letter || '_';
+      select.appendChild(option);
+    }
+    select.value = e.guess[entry.shape] || '';
+    select.addEventListener('change', () => {
+      e.guess[entry.shape] = select.value;
+      renderExercise();
+    });
+    cell.append(label, select);
+    row.appendChild(cell);
+    body.appendChild(row);
+  });
+  table.append(head, body);
+  if (focused) table.querySelector('[data-guess-shape="' + focused + '"]')?.focus();
+  const frequency = document.getElementById('englishFrequency');
+  frequency.replaceChildren();
+  for (const letter of 'ETAOINSHRDLU') {
+    const term = document.createElement('dt');
+    term.textContent = letter;
+    const value = document.createElement('dd');
+    value.textContent = PigpenCore.ENGLISH_FREQ[alphabet.indexOf(letter)] + '%';
+    frequency.append(term, value);
+  }
+}
+
 i18n.init();
+newExercise();
 render();
 document.addEventListener('languagechange', render);
 document.getElementById('languageButton').addEventListener('click', () => {

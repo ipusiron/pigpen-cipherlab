@@ -17,8 +17,8 @@ test('strict CSP, referrer and no-script fallback', () => {
 });
 
 test('tabs, dialog, labels and buttons are semantic', () => {
-  assert.equal((html.match(/role="tab"/g) || []).length, 3);
-  assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
+  assert.equal((html.match(/role="tab"/g) || []).length, 4);
+  assert.equal((html.match(/role="tabpanel"/g) || []).length, 4);
   assert.equal((html.match(/aria-selected="true"/g) || []).length, 1);
   assert.match(html, /<dialog[^>]+aria-labelledby="helpTitle"/);
   for (const match of html.matchAll(/<label[^>]*for="([^"]+)"/g)) {
@@ -45,6 +45,10 @@ test('decode stores symbols and draws their model geometry', () => {
 });
 
 test('DOM rendering has no HTML injection, inline styles or alert', () => {
+  assert.match(html, /id="tab-exercise" role="tab" aria-controls="exercise"/);
+  assert.match(html, /aria-labelledby="tab-exercise" id="exercise"/);
+  assert.match(script, /crypto\.getRandomValues\(new Uint32Array\(26\)\)/);
+  assert.doesNotMatch(script, /Math\.random/);
   assert.doesNotMatch(html, /\sstyle\s*=|\son\w+\s*=|id="encryptButton"/i);
   for (const name of ['script.js', 'js/pigpen-core.js', 'js/i18n.js']) {
     const source = fs.readFileSync(path.join(root, name), 'utf8');

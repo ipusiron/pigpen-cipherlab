@@ -353,6 +353,26 @@ const i18n = (() => {
 
   let language = 'ja';
   Object.assign(ja, {
+    'exercise.tab': '🧩 解読演習', 'exercise.heading': '解読演習', 'exercise.source': '出典',
+    'exercise.new': '新しい問題', 'exercise.hint': 'ヒント', 'exercise.answer': '答えを見る', 'exercise.clear': 'クリア',
+    'exercise.frequency': '英語の文字頻度（上位12文字）', 'exercise.symbol': '記号', 'exercise.count': '回数',
+    'exercise.percent': '割合', 'exercise.guess': '当てる文字',
+    'exercise.instructions': '記号ごとの出現回数を参考に、文字を当ててください。',
+    'exercise.unavailable': '乱数を作る機能が利用できないため、出題できません。',
+    'exercise.conflicts': '同じ文字を2つ以上の記号に当てています: {letters}',
+    'exercise.solved': '解けました: {source}', 'exercise.revealed': '答えを表示しました: {source}'
+  });
+  Object.assign(en, {
+    'exercise.tab': '🧩 Exercises', 'exercise.heading': 'Cryptanalysis Exercises', 'exercise.source': 'Source',
+    'exercise.new': 'New problem', 'exercise.hint': 'Hint', 'exercise.answer': 'Show answer', 'exercise.clear': 'Clear',
+    'exercise.frequency': 'English letter frequency (top 12)', 'exercise.symbol': 'Symbol', 'exercise.count': 'Count',
+    'exercise.percent': 'Percentage', 'exercise.guess': 'Guess',
+    'exercise.instructions': 'Use symbol frequencies to guess the letters.',
+    'exercise.unavailable': 'Random number generation is unavailable, so no problem can be created.',
+    'exercise.conflicts': 'The same letter is assigned to multiple symbols: {letters}',
+    'exercise.solved': 'Solved: {source}', 'exercise.revealed': 'Answer shown: {source}'
+  });
+  Object.assign(ja, {
     'rank.letters': '文字つき（いまの換字表）', 'rank.shapes': '形だけ（全43種）',
     'rank.sample1': 'サンプル①', 'rank.sample2': 'サンプル②', 'rank.sample3': 'サンプル③',
     'rank.heading': 'どの換字表で読めるか', 'rank.empty': '記号を入力すると候補を表示します。',

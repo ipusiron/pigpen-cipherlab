@@ -22,9 +22,29 @@
     <button type="button" class="tab-button active" data-tab="encrypt" id="tab-encrypt" role="tab" aria-controls="encrypt" aria-selected="true" tabindex="0" data-i18n="ui.2">🔐 暗号化</button>
     <button type="button" class="tab-button" data-tab="decrypt" id="tab-decrypt" role="tab" aria-controls="decrypt" aria-selected="false" tabindex="-1" data-i18n="ui.3">🔓 復号</button>
     <button type="button" class="tab-button" data-tab="learn" id="tab-learn" role="tab" aria-controls="learn" aria-selected="false" tabindex="-1" data-i18n="ui.4">📘 座学</button>
+    <button type="button" class="tab-button" data-tab="exercise" id="tab-exercise" role="tab" aria-controls="exercise"
+      aria-selected="false" tabindex="-1" data-i18n="exercise.tab">🧩 解読演習</button>
   </nav>
 
   <main>
+    <section role="tabpanel" aria-labelledby="tab-exercise" id="exercise" class="tab-content">
+      <h2 data-i18n="exercise.heading">解読演習</h2>
+      <label for="exerciseText" data-i18n="exercise.source">出典</label>
+      <select id="exerciseText"></select>
+      <button type="button" id="exerciseNew" data-i18n="exercise.new">新しい問題</button>
+      <p id="exerciseStatus" aria-live="polite"></p>
+      <div id="exerciseCipher" class="exercise-cipher"></div>
+      <div class="exercise-actions">
+        <button type="button" id="exerciseHint" data-i18n="exercise.hint">ヒント</button>
+        <button type="button" id="exerciseAnswer" data-i18n="exercise.answer">答えを見る</button>
+        <button type="button" id="exerciseClear" data-i18n="exercise.clear">クリア</button>
+      </div>
+      <p id="exerciseConflicts" aria-live="polite"></p>
+      <div class="exercise-analysis">
+        <div class="table-scroll"><table id="exerciseCounts"></table></div>
+        <aside><h3 data-i18n="exercise.frequency">英語の文字頻度（上位12文字）</h3><dl id="englishFrequency"></dl></aside>
+      </div>
+    </section>
     <!-- 暗号化タブ -->
     <section role="tabpanel" aria-labelledby="tab-encrypt" id="encrypt" class="tab-content active">
       <h2 data-i18n="ui.5">暗号化</h2>
