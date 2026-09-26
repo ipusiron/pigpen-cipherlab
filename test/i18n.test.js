@@ -5,6 +5,23 @@ const path = require('node:path');
 const i18n = require('../js/i18n.js');
 const root = path.join(__dirname, '..');
 
+test('all three mapping selectors share option order and labels in both languages', () => {
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  for (const id of ['encryptGlyphSelect', 'decryptGlyphSelect', 'learningGlyphSelect']) {
+    const markup = html.match(new RegExp(`<select id="${id}">([\\s\\S]*?)</select>`))[1];
+    const options = [...markup.matchAll(/<option value="([^"]+)"([^>]*)>([^<]*)<\/option>/g)];
+    assert.deepEqual(options.map(option => option[1]), ['1', '2', '3', 'keyword'], id);
+    assert.deepEqual(options.map(option => option[3]), ['1', '2', '3', 'キーワード'], id);
+    for (const language of ['ja', 'en']) {
+      const labels = options.map(option => {
+        const key = option[2].match(/data-i18n="([^"]+)"/);
+        return key ? i18n[language][key[1]] : option[3];
+      });
+      assert.deepEqual(labels, ['1', '2', '3', language === 'ja' ? 'キーワード' : 'Keyword'], `${id}.${language}`);
+    }
+  }
+});
+
 test('singular ignored character and unchanged Japanese message', () => {
   assert.equal(i18n.en['warn.ignoredOne'].replace('{count}', '1'), 'Ignored 1 non-letter character');
   assert.equal(i18n.en['warn.ignored'].replace('{count}', '2'), 'Ignored 2 non-letter characters');
