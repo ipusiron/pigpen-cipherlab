@@ -765,10 +765,18 @@ header button:focus-visible,
 
 .decode-sequence {
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 6px;
-  overflow-x: auto;
   min-height: 72px;
   padding: 0.5rem;
+}
+
+.decode-word {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 100%;
 }
 
 .decode-sequence .model-glyph {

@@ -273,16 +273,27 @@ function renderReading() {
   const sequence = document.getElementById('decodeSequence');
   sequence.replaceChildren();
   sequence.setAttribute('aria-label', i18n.t('decode.sequence'));
+  // Group symbols by word so that the sequence wraps between words, not inside them.
+  let word = null;
+  const flushWord = () => {
+    if (word) sequence.appendChild(word);
+    word = null;
+  };
   for (const shape of state.decodeItems) {
     if (shape === ' ' || shape === '\n') {
+      flushWord();
       const spacer = document.createElement('span');
       spacer.className = shape === '\n' ? 'cipher-newline' : 'cipher-space';
       sequence.appendChild(spacer);
     } else {
-      const img = createGlyph(shape, { className: 'cipher-glyph' });
-      sequence.appendChild(img);
+      if (!word) {
+        word = document.createElement('span');
+        word.className = 'decode-word';
+      }
+      word.appendChild(createGlyph(shape, { className: 'cipher-glyph' }));
     }
   }
+  flushWord();
   const unknown = document.getElementById('decodeUnknown');
   unknown.textContent = i18n.t('decode.unknown');
   unknown.hidden = !decryptedText.textContent.includes('?');

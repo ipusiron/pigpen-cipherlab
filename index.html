@@ -129,10 +129,6 @@
       <h3 data-i18n="ui.15">入力した記号</h3>
       <div id="decodeSequence" class="decode-sequence" role="img"></div>
       <h3 data-i18n="ui.16">復号結果</h3>
-      <h3 data-i18n="rank.heading">どの換字表で読めるか</h3>
-      <p id="rankStatus" aria-live="polite"></p>
-      <div class="table-scroll"><table id="variantRanking"></table></div>
-      <p data-i18n="rank.note">英語らしさは文字頻度だけの目安です。短い列では外れることがあります。読めない記号（?）が少ない表を先に並べます。</p>
       <div class="result-container">
         <div id="decryptedText" aria-live="polite" class="output-text"></div>
         <p id="decodeUnknown" hidden></p>
@@ -142,6 +138,10 @@
           <div id="copyToast" aria-live="polite" class="copy-toast" data-i18n="copy.success">コピーしました</div>
         </div>
       </div>
+      <h3 data-i18n="rank.heading">どの換字表で読めるか</h3>
+      <p id="rankStatus" aria-live="polite"></p>
+      <div class="table-scroll"><table id="variantRanking"></table></div>
+      <p data-i18n="rank.note">英語らしさは文字頻度だけの目安です。短い列では外れることがあります。読めない記号（?）が少ない表を先に並べます。</p>
     </section>
 
     <!-- 座学タブ -->
