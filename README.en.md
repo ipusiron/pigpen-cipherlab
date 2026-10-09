@@ -269,6 +269,20 @@ This is also the example in [Wikipedia's Pigpen cipher article](https://en.wikip
 
 ---
 
+## 🎯 Use cases
+
+### Ways of using this tool in particular
+
+- Confirming that it is a simple substitution that keeps frequencies despite the symbols (frequency-analysis classes): each letter maps to one symbol. Encrypting HELLO makes the same L the same symbol twice, so repeated letters appear as repeated symbols. Behind the symbols it is a simple substitution, and you can confirm that counting the symbols lets frequency analysis work
+- Confirming that three symbol sets make the same letter a different symbol (substitution-table classes): the tool has three ways of assigning symbols (variants), and the same "A" becomes a different symbol (set 3 differs from sets 1 and 2). You can confirm that the same plaintext gives different ciphertext when you change the symbol set
+- Confirming that a keyword changes the letter-to-symbol mapping (key-substitution classes): a keyword changes how the letters are ordered. `SECRET` produces the order `SECRTABDFGHIJKLMNOPQUVWXYZ`, which assigns each letter a different symbol from the standard. You can confirm the mechanism of rebuilding the mapping table with a key
+
+### General uses
+
+- Learn how the Pigpen cipher works in class or self-study
+- Make symbol ciphertext (SVG or image) to hand out at puzzles and events
+- Use it as a subject for frequency analysis of a simple substitution cipher
+
 ## 🔒 Security of This Tool
 
 The CSP allows only same-origin scripts and styles, with no inline execution.
