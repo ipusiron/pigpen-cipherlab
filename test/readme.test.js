@@ -65,10 +65,10 @@ test('both trees list every non-ignored project file with descriptions', () => {
 test('matching sixteen sections in their specified order', () => {
   const japanese = ['🌐 デモページ', '📸 スクリーンショット', '✨ 機能', '📖 使い方', '🧠 ピッグペン暗号とは？',
     '🔬 仕様と既知解答', '🧩 解読演習の英文', '🔤 暗号化の例', '🔍 ピッグペン暗号文の解読アプローチ', '📚 参考リソース',
-    '🔒 このツールのセキュリティ', '🧪 テスト', '📁 ディレクトリー構造', '💻 動作環境', '📄 ライセンス', '🛠️ このツールについて'];
+    '🎯 ユースケース', '🔒 このツールのセキュリティ', '🧪 テスト', '📁 ディレクトリー構造', '💻 動作環境', '📄 ライセンス', '🛠️ このツールについて'];
   const english = ['🌐 Demo', '📸 Screenshots', '✨ Features', '📖 Usage', '🧠 What Is the Pigpen Cipher?',
     '🔬 Specification and Known Answers', '🧩 Exercise Texts', '🔤 Encryption Example', '🔍 How to Break a Pigpen Ciphertext', '📚 References',
-    '🔒 Security of This Tool', '🧪 Tests', '📁 Directory Structure', '💻 Requirements', '📄 License', '🛠️ About This Tool'];
+    '🎯 Use cases', '🔒 Security of This Tool', '🧪 Tests', '📁 Directory Structure', '💻 Requirements', '📄 License', '🛠️ About This Tool'];
   assert.deepEqual([...ja.matchAll(/^## (.+)\r?$/gm)].map(m => m[1].trim()), japanese);
   assert.deepEqual([...en.matchAll(/^## (.+)\r?$/gm)].map(m => m[1].trim()), english);
   assert.ok(ja.includes('[English](README.en.md)'));
@@ -129,4 +129,20 @@ test('seven test files and corrected terminology', () => {
     assert.ok(en.includes(name), name);
   }
   assert.doesNotMatch(ja, /ビックペン|単一換字暗号は|呼ぶことにする/);
+});
+
+test('ユースケースの「このツールならではの使い方」を pigpen-core.js で再計算（日英）', () => {
+  const C = require('../js/pigpen-core.js');
+  const enc = C.encrypt(C.tokenize('HELLO', 'ignore').tokens, '1');
+  const ls = enc.filter((t) => t.letter === 'L').map((t) => t.shape);
+  assert.equal(ls.length, 2);
+  assert.equal(ls[0], ls[1]);
+  const a1 = C.shapeOf('A', '1');
+  const a3 = C.shapeOf('A', '3');
+  assert.notEqual(a1, a3);
+  assert.deepEqual(C.VARIANT_IDS, ['1', '2', '3']);
+  assert.equal(C.keyedAlphabet('SECRET'), 'SECRTABDFGHIJKLMNOPQUVWXYZ');
+  for (const md of [ja, en]) {
+    assert.ok(md.includes('HELLO') && md.includes('SECRTABDFGHIJKLMNOPQUVWXYZ'));
+  }
 });
